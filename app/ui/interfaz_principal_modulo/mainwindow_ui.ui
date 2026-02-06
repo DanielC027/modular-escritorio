@@ -247,8 +247,8 @@ vulnerables y sinceros con nosotros mismos. Ese resguardo privado es lo que conv
       <property name="date">
        <date>
         <year>2026</year>
-        <month>1</month>
-        <day>1</day>
+        <month>2</month>
+        <day>6</day>
        </date>
       </property>
      </widget>
@@ -312,6 +312,9 @@ vulnerables y sinceros con nosotros mismos. Ese resguardo privado es lo que conv
       </property>
       <property name="text">
        <string>DÍA</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
       </property>
      </widget>
      <widget class="QLabel" name="label_8">

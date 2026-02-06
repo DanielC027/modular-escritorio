@@ -130,7 +130,7 @@ class Ui_MainWindow(object):
         self.Graficas_Fecha_dateEdit.setGeometry(QRect(180, 140, 113, 24))
         self.Graficas_Fecha_dateEdit.setCurrentSection(QDateTimeEdit.Section.DaySection)
         self.Graficas_Fecha_dateEdit.setCalendarPopup(True)
-        self.Graficas_Fecha_dateEdit.setDate(QDate(2026, 1, 1))
+        self.Graficas_Fecha_dateEdit.setDate(QDate(2026, 2, 6))
         self.label = QLabel(self.tab_5)
         self.label.setObjectName("label")
         self.label.setGeometry(QRect(130, 140, 41, 21))
@@ -148,6 +148,7 @@ class Ui_MainWindow(object):
         self.Graficas_Dia_radioButton = QRadioButton(self.tab_5)
         self.Graficas_Dia_radioButton.setObjectName("Graficas_Dia_radioButton")
         self.Graficas_Dia_radioButton.setGeometry(QRect(950, 670, 92, 20))
+        self.Graficas_Dia_radioButton.setChecked(True)
         self.label_8 = QLabel(self.tab_5)
         self.label_8.setObjectName("label_8")
         self.label_8.setGeometry(QRect(110, 100, 61, 16))
@@ -359,7 +360,7 @@ class Ui_MainWindow(object):
         self.label_7.setText(
             QCoreApplication.translate(
                 "MainWindow",
-                "\u00a9 2025 KRYPT\u00d3S. Todos los derechos reservados.",
+                "\u00a9 2026 KRYPT\u00d3S. Todos los derechos reservados.",
                 None,
             )
         )
