@@ -28,38 +28,4 @@ class GestorGraficasAnalisisUI(object):
 
     @Slot()
     def graficar_analisis(self, resultado):
-        if "probabilidades" in resultado and "etiquetas" in resultado:
-            probabilidades = resultado["probabilidades"]
-            etiquetas = [resultado["etiquetas"][i] for i in range(len(probabilidades))]
-
-            scene = QGraphicsScene()
-            self.ui.Graficas_Grafica_graphicsView.setScene(scene)
-
-            bar_width = 50
-            spacing = 30
-            max_height = 300  # altura máxima de la barra
-
-            for i, prob in enumerate(probabilidades):
-                height = prob * max_height
-                rect = QGraphicsRectItem(
-                    i * (bar_width + spacing), max_height - height, bar_width, height
-                )
-                rect.setBrush(QBrush(QColor("skyblue")))
-                rect.setPen(Qt.NoPen)
-                scene.addItem(rect)
-
-                # Etiqueta debajo de la barra
-                text = QGraphicsTextItem(etiquetas[i])
-                text.setPos(i * (bar_width + spacing), max_height + 5)
-                text.setTextWidth(bar_width)
-                scene.addItem(text)
-
-                # Valor encima de la barra
-                value_text = QGraphicsTextItem(f"{prob:.3f}")
-                value_text.setPos(i * (bar_width + spacing), max_height - height - 20)
-                value_text.setTextWidth(bar_width)
-                scene.addItem(value_text)
-
-            scene.setSceneRect(
-                0, 0, len(probabilidades) * (bar_width + spacing), max_height + 50
-            )
+        pass

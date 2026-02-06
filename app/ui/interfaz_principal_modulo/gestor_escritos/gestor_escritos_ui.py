@@ -42,6 +42,15 @@ class GestorEscritosUI(object):
     def graficar_analisis(self, resultado):
         try:
             if "probabilidades" in resultado and "etiquetas" in resultado:
+                TRADUCCION_ETIQUETAS = {
+                    "anger": "enojo",
+                    "disgust": "asco",
+                    "fear": "miedo",
+                    "joy": "alegría",
+                    "sadness": "tristeza",
+                    "surprise": "sorpresa",
+                    "others": "otros",
+                }
                 probabilidades = resultado["probabilidades"]
                 etiquetas = [
                     resultado["etiquetas"][i] for i in range(len(probabilidades))
@@ -67,7 +76,10 @@ class GestorEscritosUI(object):
                     scene.addItem(rect)
 
                     # Etiqueta debajo de la barra
-                    text = QGraphicsTextItem(etiquetas[i])
+                    etiqueta_en = str(etiquetas[i])
+                    etiqueta_esp = TRADUCCION_ETIQUETAS[etiqueta_en]
+
+                    text = QGraphicsTextItem(etiqueta_esp)
                     text.setPos(i * (bar_width + spacing), max_height + 5)
                     text.setTextWidth(bar_width)
                     scene.addItem(text)
