@@ -7,8 +7,8 @@ from ..modelos import (
 )
 
 
-def registrar_usuario(usuario, sal):
-    crear_usuario(usuario, sal)
+def registrar_usuario(usuario, crypto_datos):
+    crear_usuario(usuario, crypto_datos)
 
 
 def mostrar_usuario(id_usuario):

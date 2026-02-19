@@ -3,13 +3,28 @@ from .conexion import obtener_conexion
 """ TABLA USUARIO """
 
 
-def crear_usuario(usuario, sal):
+def crear_usuario(usuario, crypto_datos):
     try:
         with obtener_conexion() as conn:
             cursor = conn.cursor()
             cursor.execute(
                 "INSERT INTO USUARIO (Usuario, Sal) VALUES (?, ?);",
-                (usuario, sal),
+                (usuario, crypto_datos["sal"]),
+            )
+            cursor.execute(
+                "SELECT ID_USUARIO FROM USUARIO WHERE USUARIO = ?;",
+                (usuario,),
+            )
+            id_usuario = cursor.fetchone()
+            cursor.execute(
+                "INSERT INTO CONTROL_CRYPTO (ID_USUARIO, PAYLOAD_A, IV_A, PAYLOAD_B, IV_B) VALUES (?, ?, ?, ?, ?);",
+                (
+                    id_usuario,
+                    crypto_datos["payload_a"],
+                    crypto_datos["iv_a"],
+                    crypto_datos["payload_b"],
+                    crypto_datos["iv_b"],
+                ),
             )
             conn.commit()
     except Exception as ex:
