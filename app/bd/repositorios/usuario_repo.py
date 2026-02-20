@@ -4,6 +4,7 @@ from ..modelos import (
     actualizar_usuario,
     eliminar_usuario,
     obtener_usuario_por_usuario_registro,
+    es_tabla_vacia_usuarios,
 )
 
 
@@ -25,3 +26,7 @@ def eliminar_usuario_completamente(id_usuario):
 
 def obtener_usuario_por_usuario(usuario):
     return obtener_usuario_por_usuario_registro(usuario)
+
+
+def es_tabla_vacia_usuario():
+    return es_tabla_vacia_usuarios()

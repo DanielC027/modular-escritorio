@@ -1,6 +1,6 @@
 # from ...nucleo.analisis_modulo.analisis_ia_modulo import AnalisisANN
 
-from nucleo.analisis_modulo.analisis_ia_modulo import AnalisisANN
+from ...nucleo.analisis_modulo.analisis_ia_modulo import AnalisisANN
 
 
 class GestorAnalisis:

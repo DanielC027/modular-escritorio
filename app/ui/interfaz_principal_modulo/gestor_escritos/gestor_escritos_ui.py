@@ -12,9 +12,10 @@ from PySide6.QtGui import QBrush, QColor
 from PySide6.QtCore import Qt, Slot
 
 from ..mainwindow_ui import Ui_MainWindow
-from servicios.gestor_analisis_modulo.gestor_analisis import GestorAnalisis
-from servicios.gestor_conexion_websocket.gestor_conexion_ws import BackendWSService
-from nucleo.hilo_modulo.trabajador_modulo import Trabajador
+
+from ....servicios.gestor_analisis_modulo.gestor_analisis import GestorAnalisis
+from ....servicios.gestor_conexion_websocket.gestor_conexion_ws import BackendWSService
+from ....nucleo.hilo_modulo.trabajador_modulo import Trabajador
 
 
 class GestorEscritosUI:

@@ -57,6 +57,18 @@ def obtener_usuario_por_usuario_registro(usuario):
         print("Error al obtener usuario:", ex)
 
 
+def es_tabla_vacia_usuarios():
+    try:
+        with obtener_conexion() as conn:
+            resultado = conn.execute(
+                "SELECT EXISTS (SELECT 1 FROM USUARIO);"
+            ).fetchone()[0]
+            return not bool(resultado)
+    except Exception as ex:
+        print("Error al obtener control crypto:", ex)
+        return False
+
+
 def actualizar_usuario(id_usuario, usuario, sal):
     try:
         with obtener_conexion() as conn:
@@ -114,6 +126,18 @@ def obtener_control_crypto(id_usuario):
             return cursor.fetchone()
     except Exception as ex:
         print("Error al obtener control crypto:", ex)
+
+
+def es_tabla_vacia_control_crypto():
+    try:
+        with obtener_conexion() as conn:
+            resultado = conn.execute(
+                "SELECT EXISTS (SELECT 1 FROM CONTROL_CRYPTO);"
+            ).fetchone()[0]
+            return not bool(resultado)
+    except Exception as ex:
+        print("Error al obtener control crypto:", ex)
+        return False
 
 
 def actualizar_control_crypto(id_usuario, payload_a, iv_a, payload_b, iv_b):

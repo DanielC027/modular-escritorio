@@ -4,7 +4,7 @@ from PySide6.QtCore import Qt, Slot
 
 
 from ..mainwindow_ui import Ui_MainWindow
-from servicios.gestor_analisis_modulo.gestor_analisis import GestorAnalisis
+from ....servicios.gestor_analisis_modulo.gestor_analisis import GestorAnalisis
 
 
 class GestorGraficasAnalisisUI(object):
