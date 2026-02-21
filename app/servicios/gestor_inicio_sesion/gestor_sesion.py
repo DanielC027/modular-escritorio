@@ -2,7 +2,7 @@ from ...bd.repositorios.usuario_repo import (
     registrar_usuario,
     obtener_usuario_por_usuario,
     es_tabla_vacia_usuario,
-    mostrar_usuario,
+    mostrar_usuario_por_id,
 )
 from ...bd.repositorios.control_repo import (
     obtener_control,
@@ -16,6 +16,15 @@ class GestorSesion:
     def IniciarSesion(self, usuario, contrasena):
         """Intentar iniciar sesion"""
         ESTADO = {"SIN_REGISTRO": 0, "AUTENTICADO": 1, "NO_AUTENTICADO": 2}
+        USUARIO = {"ID_USUARIO": 0, "USUARIO": 1, "SAL": 2}
+        CRYPTO = {
+            "ID_CRYPTO": 0,
+            "ID_USUARIO": 1,
+            "PAYLOAD_A": 2,
+            "IV_A": 3,
+            "PAYLOAD_B": 4,
+            "IV_B": 5,
+        }
         # Revisar si existe usuario y control de criptografia creados en la bd
         if es_tabla_vacia_usuario() or es_tabla_vacia_controlcrypto():
             # Si no existe regresar REGISTRO
@@ -23,11 +32,19 @@ class GestorSesion:
 
         # Obtener usuario por usuario sal, payload_a, iv_a, payload_b, iv_b de la bd
         id_persona = obtener_usuario_por_usuario(usuario)
-        datos_persona = mostrar_usuario(id_persona)
-        print(datos_persona)
+
+        datos_persona = mostrar_usuario_por_id(id_persona)
+        print(
+            "datos persona: ",
+            datos_persona[USUARIO["USUARIO"]],
+            " ",
+            datos_persona[USUARIO["SAL"]],
+        )
 
         datos_control_crypto = obtener_control(id_persona)
-        print(datos_control_crypto)
+        print(
+            f"datso crypto: {datos_control_crypto[CRYPTO["ID_CRYPTO"]]} {datos_control_crypto[CRYPTO["ID_USUARIO"]]} {datos_control_crypto[CRYPTO["PAYLOAD_A"]]} {datos_control_crypto[CRYPTO["IV_A"]]} {datos_control_crypto[CRYPTO["PAYLOAD_B"]]} {datos_control_crypto[CRYPTO["IV_B"]]}  "
+        )
         # Intentar desencriptar payloads
         print(
             f"INICIAR SESION - REVISAR CREDENCIALES: usuario - {usuario} , contaseña - {contrasena}"

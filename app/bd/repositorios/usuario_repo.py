@@ -12,7 +12,7 @@ def registrar_usuario(usuario, crypto_datos):
     crear_usuario(usuario, crypto_datos)
 
 
-def mostrar_usuario(id_usuario):
+def mostrar_usuario_por_id(id_usuario):
     return obtener_usuario(id_usuario)
 
 

@@ -39,7 +39,7 @@ def obtener_usuario(id_usuario):
                 "SELECT * FROM USUARIO WHERE ID_Usuario = ?;",
                 (id_usuario,),
             )
-            return cursor.fetchone()[0]
+            return cursor.fetchone()
     except Exception as ex:
         print("Error al obtener usuario:", ex)
 
@@ -49,7 +49,7 @@ def obtener_usuario_por_usuario_registro(usuario):
         with obtener_conexion() as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "SELECT * FROM USUARIO WHERE Usuario = ?;",
+                "SELECT ID_USUARIO FROM USUARIO WHERE Usuario = ?;",
                 (usuario,),
             )
             return cursor.fetchone()[0]
@@ -106,7 +106,7 @@ def obtener_control_crypto(id_usuario):
                 "SELECT * FROM CONTROL_CRYPTO WHERE ID_Usuario = ?;",
                 (id_usuario,),
             )
-            return cursor.fetchone()[0]
+            return cursor.fetchone()
     except Exception as ex:
         print("Error al obtener control crypto:", ex)
 
