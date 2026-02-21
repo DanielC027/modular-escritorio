@@ -1,14 +1,9 @@
 from ..modelos import (
-    crear_control_crypto,
     obtener_control_crypto,
     actualizar_control_crypto,
     eliminar_control_crypto,
     es_tabla_vacia_control_crypto,
 )
-
-
-def registrar_control_crypto(id_usuario, payload_a, iv_a, payload_b, iv_b):
-    crear_control_crypto(id_usuario, payload_a, iv_a, payload_b, iv_b)
 
 
 def obtener_control(id_usuario):

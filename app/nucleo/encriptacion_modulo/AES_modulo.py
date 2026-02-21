@@ -39,3 +39,6 @@ class AESCifrado:
         texto_plano = cifrador.decrypt_and_verify(texto, tag)
 
         return texto_plano.decode()
+
+    def obtener_payload_aleatorio(self) -> str:
+        return base64.b64encode(get_random_bytes(16)).decode()

@@ -15,7 +15,7 @@ def crear_usuario(usuario, crypto_datos):
                 "SELECT ID_USUARIO FROM USUARIO WHERE USUARIO = ?;",
                 (usuario,),
             )
-            id_usuario = cursor.fetchone()
+            id_usuario = cursor.fetchone()[0]
             cursor.execute(
                 "INSERT INTO CONTROL_CRYPTO (ID_USUARIO, PAYLOAD_A, IV_A, PAYLOAD_B, IV_B) VALUES (?, ?, ?, ?, ?);",
                 (
@@ -39,7 +39,7 @@ def obtener_usuario(id_usuario):
                 "SELECT * FROM USUARIO WHERE ID_Usuario = ?;",
                 (id_usuario,),
             )
-            return cursor.fetchone()
+            return cursor.fetchone()[0]
     except Exception as ex:
         print("Error al obtener usuario:", ex)
 
@@ -52,7 +52,7 @@ def obtener_usuario_por_usuario_registro(usuario):
                 "SELECT * FROM USUARIO WHERE Usuario = ?;",
                 (usuario,),
             )
-            return cursor.fetchone()
+            return cursor.fetchone()[0]
     except Exception as ex:
         print("Error al obtener usuario:", ex)
 
@@ -98,23 +98,6 @@ def eliminar_usuario(id_usuario):
 """ TABLA CONTROL CRYPTO """
 
 
-def crear_control_crypto(id_usuario, payload_a, iv_a, payload_b, iv_b):
-    try:
-        with obtener_conexion() as conn:
-            cursor = conn.cursor()
-            cursor.execute(
-                """
-                INSERT INTO CONTROL_CRYPTO 
-                (ID_Usuario, Payload_A, IV_A, Payload_B, IV_B)
-                VALUES (?, ?, ?, ?, ?);
-                """,
-                (id_usuario, payload_a, iv_a, payload_b, iv_b),
-            )
-            conn.commit()
-    except Exception as ex:
-        print("Error al crear control crypto:", ex)
-
-
 def obtener_control_crypto(id_usuario):
     try:
         with obtener_conexion() as conn:
@@ -123,7 +106,7 @@ def obtener_control_crypto(id_usuario):
                 "SELECT * FROM CONTROL_CRYPTO WHERE ID_Usuario = ?;",
                 (id_usuario,),
             )
-            return cursor.fetchone()
+            return cursor.fetchone()[0]
     except Exception as ex:
         print("Error al obtener control crypto:", ex)
 
