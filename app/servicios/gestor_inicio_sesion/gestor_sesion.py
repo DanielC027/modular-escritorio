@@ -25,14 +25,19 @@ class GestorSesion:
             "PAYLOAD_B": 4,
             "IV_B": 5,
         }
+
+        encripta_modulo = AESCifrado()
+
         # Revisar si existe usuario y control de criptografia creados en la bd
         if es_tabla_vacia_usuario() or es_tabla_vacia_controlcrypto():
-            # Si no existe regresar REGISTRO
+            # Si no existe regresar a REGISTRO
             return ESTADO["SIN_REGISTRO"]
 
-        # Obtener usuario por usuario sal, payload_a, iv_a, payload_b, iv_b de la bd
+        # --- Obtener usuario por usuario sal, payload_a, iv_a, payload_b, iv_b de la bd
+        # id perosna
         id_persona = obtener_usuario_por_usuario(usuario)
 
+        # datos persona - id, usuario, sal = sal_a | sal_b
         datos_persona = mostrar_usuario_por_id(id_persona)
         print(
             "datos persona: ",
@@ -40,11 +45,66 @@ class GestorSesion:
             " ",
             datos_persona[USUARIO["SAL"]],
         )
-
+        # datos control crypto - id_crypto, id_usuario, payload_a, iv_a, payload_b, iv_b
         datos_control_crypto = obtener_control(id_persona)
         print(
             f"datso crypto: {datos_control_crypto[CRYPTO["ID_CRYPTO"]]} {datos_control_crypto[CRYPTO["ID_USUARIO"]]} {datos_control_crypto[CRYPTO["PAYLOAD_A"]]} {datos_control_crypto[CRYPTO["IV_A"]]} {datos_control_crypto[CRYPTO["PAYLOAD_B"]]} {datos_control_crypto[CRYPTO["IV_B"]]}  "
         )
+
+        # Datos a
+        identidad_a_sal = datos_persona[USUARIO["SAL"]].split("|")[0]  # sal_a | sal_b
+        identidad_a_nonce = datos_control_crypto[CRYPTO["IV_A"]]  # iv_a (nonce)
+        identidad_a_tag = datos_control_crypto[CRYPTO["PAYLOAD_A"]].split("|")[
+            0
+        ]  # tag | texto
+        identidad_a_texto = datos_control_crypto[CRYPTO["PAYLOAD_A"]].split("|")[
+            1
+        ]  # tag | texto
+        datos_a = {
+            "sal": identidad_a_sal,
+            "nonce": identidad_a_nonce,
+            "tag": identidad_a_tag,
+            "texto": identidad_a_texto,
+        }
+        # Datos b
+        identidad_b_sal = datos_persona[USUARIO["SAL"]].split("|")[1]  # sal_a | sal_b
+        identidad_b_nonce = datos_control_crypto[CRYPTO["IV_B"]]  # iv_b (nonce)
+        identidad_b_tag = datos_control_crypto[CRYPTO["PAYLOAD_B"]].split("|")[
+            0
+        ]  # tag | texto
+        identidad_b_texto = datos_control_crypto[CRYPTO["PAYLOAD_B"]].split("|")[
+            1
+        ]  # tag | texto
+        datos_b = {
+            "sal": identidad_b_sal,
+            "nonce": identidad_b_nonce,
+            "tag": identidad_b_tag,
+            "texto": identidad_b_texto,
+        }
+
+        print("datos_a ", datos_a)
+        print("datos b ", datos_b)
+
+        # Prueba datos_a
+        print("-------------")
+        try:
+            resultado_a = encripta_modulo.desencriptar(contrasena, datos_a)
+            print(resultado_a)
+            return ESTADO["AUTENTICADO"]
+        except Exception as ex:
+            print("Error a: ", ex)
+
+        # Prueba datos_b
+        try:
+            resultado_b = encripta_modulo.desencriptar(contrasena, datos_b)
+            print(resultado_b)
+            return ESTADO["AUTENTICADO"]
+        except Exception as ex:
+            print("Error b: ", ex)
+            return ESTADO["NO_AUTENTICADO"]
+
+        print("-------------")
+
         # Intentar desencriptar payloads
         print(
             f"INICIAR SESION - REVISAR CREDENCIALES: usuario - {usuario} , contaseña - {contrasena}"

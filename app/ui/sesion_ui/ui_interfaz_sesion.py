@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QMainWindow, QMessageBox
 from PySide6.QtCore import Slot, Signal
 from .sesion_mainwindow_ui import Ui_SesionMainWindow
 from ...servicios.gestor_inicio_sesion.gestor_sesion import GestorSesion
@@ -28,3 +28,9 @@ class UiInterfazSesion(QMainWindow):
 
         if respuesta == ESTADO["SIN_REGISTRO"]:
             self.necesita_registro.emit()
+        elif respuesta == ESTADO["AUTENTICADO"]:
+            self.inicio_satisfactorio.emit()
+        elif respuesta == ESTADO["NO_AUTENTICADO"]:
+            msgBox = QMessageBox()
+            msgBox.setText("Contraseña incorrecta, intenta de nuevo.")
+            msgBox.exec()
