@@ -121,6 +121,9 @@ class Ui_SesionMainWindow(object):
         self.line_2.setGeometry(QRect(70, 400, 321, 20))
         self.line_2.setFrameShape(QFrame.Shape.HLine)
         self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
+        self.registrarse_pushButton = QPushButton(self.groupBox_2)
+        self.registrarse_pushButton.setObjectName("registrarse_pushButton")
+        self.registrarse_pushButton.setGeometry(QRect(290, 580, 161, 21))
 
         self.gridLayout.addWidget(self.groupBox, 0, 1, 1, 1)
 
@@ -158,5 +161,8 @@ class Ui_SesionMainWindow(object):
         )
         self.label_2.setText("")
         self.label_3.setText("")
+        self.registrarse_pushButton.setText(
+            QCoreApplication.translate("MainWindow", "REGISTRARSE", None)
+        )
 
     # retranslateUi

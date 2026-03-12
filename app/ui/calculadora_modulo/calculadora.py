@@ -1,5 +1,6 @@
 class Calculadora:
-    def __init__(self):
+    def __init__(self, iniciar_sistema):
+        self.iniciar_sistem = iniciar_sistema
         self.reset()
 
     def reset(self):
@@ -43,6 +44,12 @@ class Calculadora:
         if self.valor_actual == "" or self.operacion is None:
             return "0"
 
+        if (
+            float(self.valor_actual) == 911
+            and float(self.valor_anterior) == 911
+            and self.operacion == "-"
+        ):
+            self.iniciar_sistem.emit()
         self._calcular_parcial()
         self.operacion = None
         self.resultado_mostrado = True

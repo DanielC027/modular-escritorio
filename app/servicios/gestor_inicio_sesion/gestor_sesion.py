@@ -13,6 +13,13 @@ from ...nucleo.encriptacion_modulo.AES_modulo import AESCifrado
 
 
 class GestorSesion:
+    def ExisteCuenta(self):
+        if es_tabla_vacia_usuario() or es_tabla_vacia_controlcrypto():
+            # Si no existe regresar a REGISTRO
+            return False
+        else:
+            return True
+
     def IniciarSesion(self, usuario, contrasena):
         """Intentar iniciar sesion"""
         ESTADO = {"SIN_REGISTRO": 0, "AUTENTICADO": 1, "NO_AUTENTICADO": 2}
@@ -85,6 +92,8 @@ class GestorSesion:
         print("datos_a ", datos_a)
         print("datos b ", datos_b)
 
+        # Si se desencripta alguno - pasar, si no, usuario o contraseña no validos
+        # Si desencripta payload regresar satisfactorio - ESTADO["AUTENTICADO"]
         # Prueba datos_a
         print("-------------")
         try:
@@ -102,17 +111,6 @@ class GestorSesion:
         except Exception as ex:
             print("Error b: ", ex)
             return ESTADO["NO_AUTENTICADO"]
-
-        print("-------------")
-
-        # Intentar desencriptar payloads
-        print(
-            f"INICIAR SESION - REVISAR CREDENCIALES: usuario - {usuario} , contaseña - {contrasena}"
-        )
-        # si se desencripta alguno - pasar, si no, usuario o contraseña no validos
-        # Si desencripta payload regresar satisfactorio - ESTADO["AUTENTICADO"]
-        # Si no desencripta payload regresar NO satisfactorio - ESTADO["NO_AUTENTICADO"]
-        pass
 
     def RegistrarUsuario(self, usuario, contrasena_1, contrasena_2):
         """Registrar usuario"""

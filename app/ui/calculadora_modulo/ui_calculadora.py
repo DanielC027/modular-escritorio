@@ -1,17 +1,19 @@
 from PySide6.QtWidgets import QMainWindow
-from PySide6.QtCore import Slot
-from calculadora_mainwindow_ui import Ui_MainWindow
-from calculadora import Calculadora
+from PySide6.QtCore import Slot, Signal
+from .calculadora_mainwindow_ui import Ui_MainWindow
+from .calculadora import Calculadora
 
 
-class MainWindow(QMainWindow):
+class UiInterfazCalculadora(QMainWindow):
+    iniciar_sistema = Signal()
+
     def __init__(self):
         super().__init__()
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.calc = Calculadora()
+        self.calc = Calculadora(self.iniciar_sistema)
 
         # ===== Numeros =====
         self.ui.pushButton_cero.clicked.connect(lambda: self.numero("0"))

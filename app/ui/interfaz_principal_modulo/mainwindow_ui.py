@@ -67,6 +67,7 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1489, 969)
+        MainWindow.setStyleSheet("")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.tabWidget = QTabWidget(self.centralwidget)

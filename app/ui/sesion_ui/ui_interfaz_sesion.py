@@ -15,13 +15,25 @@ class UiInterfazSesion(QMainWindow):
         self.ui.setupUi(self)
 
         self.ui.iniciar_pushButton.clicked.connect(self.iniciar_sesion)
+        self.ui.registrarse_pushButton.clicked.connect(self.registrarse)
 
     @Slot()
     def iniciar_sesion(self):
         ESTADO = {"SIN_REGISTRO": 0, "AUTENTICADO": 1, "NO_AUTENTICADO": 2}
 
+        if not GestorSesion().ExisteCuenta():
+            print("revisado")
+            self.necesita_registro.emit()
+            return
+
         usuario = self.ui.usuario_lineEdit.text()
         contrasena = self.ui.contrasena_lineEdit.text()
+
+        if not usuario or not contrasena:
+            msgBox = QMessageBox()
+            msgBox.setText("Usuario o Contraseña incorrecta, intenta de nuevo.")
+            msgBox.exec()
+            return
 
         gestor_sesion = GestorSesion()
         respuesta = gestor_sesion.IniciarSesion(usuario, contrasena)
@@ -32,5 +44,14 @@ class UiInterfazSesion(QMainWindow):
             self.inicio_satisfactorio.emit()
         elif respuesta == ESTADO["NO_AUTENTICADO"]:
             msgBox = QMessageBox()
-            msgBox.setText("Contraseña incorrecta, intenta de nuevo.")
+            msgBox.setText("Usuario o Contraseña incorrecta, intenta de nuevo.")
             msgBox.exec()
+
+    @Slot()
+    def registrarse(self):
+        if GestorSesion().ExisteCuenta():
+            msgBox = QMessageBox()
+            msgBox.setText("Cuenta ya creada.")
+            msgBox.exec()
+        else:
+            self.necesita_registro.emit()

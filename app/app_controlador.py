@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QApplication
 
+from .ui.calculadora_modulo.ui_calculadora import UiInterfazCalculadora
 from .ui.sesion_ui.ui_interfaz_sesion import UiInterfazSesion
 from .ui.sesion_ui.ui_interfaz_registro import UiInterfazRegistro
 from .ui.interfaz_principal_modulo.ui_interfaz_principal import UiInterfazPrincipal
@@ -10,15 +11,26 @@ class AppControlador:
     def __init__(self):
         self.app = QApplication([])
 
+        self.calculadora_interfaz = None
+
         self.sesion_interfaz = None
         self.registro_interfaz = None
         self.interfaz_principal = None
 
     def iniciar(self):
-        self.mostrar_inicio()
+        self.mostrar_calculadora()
         return self.app.exec()
 
+    def mostrar_calculadora(self):
+        self.calculadora_interfaz = UiInterfazCalculadora()
+
+        self.calculadora_interfaz.iniciar_sistema.connect(self.mostrar_inicio)
+
+        self.calculadora_interfaz.show()
+
     def mostrar_inicio(self):
+        self.calculadora_interfaz.close()
+
         self.sesion_interfaz = UiInterfazSesion()
 
         self.sesion_interfaz.necesita_registro.connect(self.mostrar_registro)
