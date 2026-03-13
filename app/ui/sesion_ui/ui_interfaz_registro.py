@@ -26,8 +26,7 @@ class UiInterfazRegistro(QMainWindow):
 
             if not usuario or not contrasena_1 or not contrasena_2:
                 msgBox = QMessageBox()
-                msgBox.setText("Datos incorrectos, intenta de nuevo.")
-                msgBox.exec()
+                msgBox.critical(self.ui.centralwidget, "Error", "Datos incorrectos, intenta de nuevo.")
                 return
 
             gestor_sesion = GestorSesion()
@@ -40,5 +39,4 @@ class UiInterfazRegistro(QMainWindow):
             self.registro_exitoso.emit()
         except Exception as ex:
             msgBox = QMessageBox()
-            msgBox.setText(f"Error: {ex}")
-            msgBox.exec()
+            msgBox.critical(self.ui.centralwidget, "Error",f"Error: {ex}")

@@ -31,8 +31,7 @@ class UiInterfazSesion(QMainWindow):
 
         if not usuario or not contrasena:
             msgBox = QMessageBox()
-            msgBox.setText("Usuario o Contraseña incorrecta, intenta de nuevo.")
-            msgBox.exec()
+            msgBox.critical(self.ui.centralwidget, "Error", "Usuario o Contraseña incorrecta, intenta de nuevo.")
             return
 
         gestor_sesion = GestorSesion()
@@ -44,8 +43,7 @@ class UiInterfazSesion(QMainWindow):
             self.inicio_satisfactorio.emit()
         elif respuesta == ESTADO["NO_AUTENTICADO"]:
             msgBox = QMessageBox()
-            msgBox.setText("Usuario o Contraseña incorrecta, intenta de nuevo.")
-            msgBox.exec()
+            msgBox.critical(self.ui.centralwidget, "Error", "Usuario o Contraseña incorrecta, intenta de nuevo.")
 
     @Slot()
     def registrarse(self):
