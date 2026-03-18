@@ -67,7 +67,111 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1489, 969)
-        MainWindow.setStyleSheet("")
+        MainWindow.setStyleSheet(
+            "/* Fondo general */\n"
+            "QWidget {\n"
+            "    background-color: #1e1e2f;\n"
+            "    color: #f0f0f0;\n"
+            '    font-family: "Segoe UI", Arial, sans-serif;\n'
+            "    font-size: 14px;\n"
+            "}\n"
+            "\n"
+            "/* Botones */\n"
+            "QPushButton {\n"
+            "    background-color: #3a3f5a;\n"
+            "    border: none;\n"
+            "    border-radius: 8px;\n"
+            "    padding: 6px 12px;\n"
+            "}\n"
+            "\n"
+            "QPushButton:hover {\n"
+            "    background-color: #50577a;\n"
+            "}\n"
+            "\n"
+            "QPushButton:pressed {\n"
+            "    background-color: #2c3147;\n"
+            "}\n"
+            "\n"
+            "/* Inputs */\n"
+            "QLineEdit, QTextEdit, QPlainTextEdit {\n"
+            "    background-color: #2a2f45;\n"
+            "    border: 1px solid #3f4662;\n"
+            "    border-radius: 6px;\n"
+            "    padding: 6px;\n"
+            "}\n"
+            "\n"
+            "/* Labels */\n"
+            "QLabel {\n"
+            "    color: #e0e0e0;\n"
+            "}\n"
+            "\n"
+            "/* ComboBox */\n"
+            "QComboBox {\n"
+            "    background-color: #2a2f45;\n"
+            "    border: 1px solid #3f4662;\n"
+            "    border-radius: 6px;\n"
+            "    padding: 5px;\n"
+            "}\n"
+            "\n"
+            "QComboBox::drop-down {\n"
+            "    border: none;\n"
+            "}\n"
+            "\n"
+            "/* Scrollbar */\n"
+            "QScrollBar:vertical {\n"
+            "    backg"
+            "round: #1e1e2f;\n"
+            "    width: 10px;\n"
+            "    margin: 2px;\n"
+            "}\n"
+            "\n"
+            "QScrollBar::handle:vertical {\n"
+            "    background: #3a3f5a;\n"
+            "    border-radius: 5px;\n"
+            "}\n"
+            "\n"
+            "QScrollBar::handle:vertical:hover {\n"
+            "    background: #50577a;\n"
+            "}\n"
+            "\n"
+            "/* CheckBox */\n"
+            "QCheckBox {\n"
+            "    spacing: 6px;\n"
+            "}\n"
+            "\n"
+            "QCheckBox::indicator {\n"
+            "    width: 14px;\n"
+            "    height: 14px;\n"
+            "}\n"
+            "\n"
+            "QCheckBox::indicator:checked {\n"
+            "    background-color: #6c8cff;\n"
+            "    border-radius: 3px;\n"
+            "}\n"
+            "\n"
+            "/* Tabs */\n"
+            "QTabWidget::pane {\n"
+            "    border: 1px solid #3f4662;\n"
+            "}\n"
+            "\n"
+            "QTabBar::tab {\n"
+            "    background: #2a2f45;\n"
+            "    padding: 8px;\n"
+            "    border-top-left-radius: 6px;\n"
+            "    border-top-right-radius: 6px;\n"
+            "}\n"
+            "\n"
+            "QTabBar::tab:selected {\n"
+            "    background: #3a3f5a;\n"
+            "}\n"
+            "\n"
+            "/* Tooltips */\n"
+            "QToolTip {\n"
+            "    background-color: #3a3f5a;\n"
+            "    color: #ffffff;\n"
+            "    border: 1px solid #6c8cff;\n"
+            "}"
+        )
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.tabWidget = QTabWidget(self.centralwidget)
@@ -79,18 +183,17 @@ class Ui_MainWindow(object):
         self.label_25.setObjectName("label_25")
         self.label_25.setGeometry(QRect(410, 60, 661, 61))
         font = QFont()
-        font.setPointSize(14)
+        font.setFamilies(["Segoe UI"])
         self.label_25.setFont(font)
         self.label_25.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.groupBox_3 = QGroupBox(self.tab)
         self.groupBox_3.setObjectName("groupBox_3")
         self.groupBox_3.setGeometry(QRect(170, 150, 1121, 511))
+        self.groupBox_3.setStyleSheet("QGroupBox{border: 1px solid #3f4662;\n" "}")
         self.label_26 = QLabel(self.groupBox_3)
         self.label_26.setObjectName("label_26")
         self.label_26.setGeometry(QRect(50, 80, 1031, 301))
-        font1 = QFont()
-        font1.setPointSize(10)
-        self.label_26.setFont(font1)
+        self.label_26.setFont(font)
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QWidget()
         self.tab_2.setObjectName("tab_2")
@@ -158,14 +261,20 @@ class Ui_MainWindow(object):
         self.tab_8.setObjectName("tab_8")
         self.gridLayout = QGridLayout(self.tab_8)
         self.gridLayout.setObjectName("gridLayout")
-        self.Configuracion_Cambiar_Contrasena = QLabel(self.tab_8)
-        self.Configuracion_Cambiar_Contrasena.setObjectName(
-            "Configuracion_Cambiar_Contrasena"
-        )
-        self.Configuracion_Cambiar_Contrasena.setFont(font)
-        self.Configuracion_Cambiar_Contrasena.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.line = QFrame(self.tab_8)
+        self.line.setObjectName("line")
+        self.line.setFrameShape(QFrame.Shape.HLine)
+        self.line.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.gridLayout.addWidget(self.Configuracion_Cambiar_Contrasena, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.line, 4, 0, 1, 1)
+
+        self.line_2 = QFrame(self.tab_8)
+        self.line_2.setObjectName("line_2")
+        self.line_2.setStyleSheet("QWidget{border: 1px solid #3f4662;\n" "}")
+        self.line_2.setFrameShape(QFrame.Shape.HLine)
+        self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.gridLayout.addWidget(self.line_2, 2, 0, 1, 1)
 
         self.line_4 = QFrame(self.tab_8)
         self.line_4.setObjectName("line_4")
@@ -173,22 +282,6 @@ class Ui_MainWindow(object):
         self.line_4.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.gridLayout.addWidget(self.line_4, 1, 0, 1, 1)
-
-        self.Configuracion_Crear_Cuenta_Web = QLabel(self.tab_8)
-        self.Configuracion_Crear_Cuenta_Web.setObjectName(
-            "Configuracion_Crear_Cuenta_Web"
-        )
-        self.Configuracion_Crear_Cuenta_Web.setFont(font)
-        self.Configuracion_Crear_Cuenta_Web.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout.addWidget(self.Configuracion_Crear_Cuenta_Web, 2, 0, 1, 1)
-
-        self.line = QFrame(self.tab_8)
-        self.line.setObjectName("line")
-        self.line.setFrameShape(QFrame.Shape.HLine)
-        self.line.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.gridLayout.addWidget(self.line, 3, 0, 1, 1)
 
         self.Configuracion_Eliminar_Cuenta_Web = QLabel(self.tab_8)
         self.Configuracion_Eliminar_Cuenta_Web.setObjectName(
@@ -199,7 +292,33 @@ class Ui_MainWindow(object):
             Qt.AlignmentFlag.AlignCenter
         )
 
-        self.gridLayout.addWidget(self.Configuracion_Eliminar_Cuenta_Web, 4, 0, 1, 1)
+        self.gridLayout.addWidget(self.Configuracion_Eliminar_Cuenta_Web, 6, 0, 1, 1)
+
+        self.Configuracion_Cambiar_Contrasena = QLabel(self.tab_8)
+        self.Configuracion_Cambiar_Contrasena.setObjectName(
+            "Configuracion_Cambiar_Contrasena"
+        )
+        self.Configuracion_Cambiar_Contrasena.setFont(font)
+        self.Configuracion_Cambiar_Contrasena.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout.addWidget(self.Configuracion_Cambiar_Contrasena, 0, 0, 1, 1)
+
+        self.Configuracion_Crear_Cuenta_Web = QLabel(self.tab_8)
+        self.Configuracion_Crear_Cuenta_Web.setObjectName(
+            "Configuracion_Crear_Cuenta_Web"
+        )
+        self.Configuracion_Crear_Cuenta_Web.setFont(font)
+        self.Configuracion_Crear_Cuenta_Web.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout.addWidget(self.Configuracion_Crear_Cuenta_Web, 3, 0, 1, 1)
+
+        self.line_3 = QFrame(self.tab_8)
+        self.line_3.setObjectName("line_3")
+        self.line_3.setStyleSheet("QWidget{border: 1px solid #3f4662;\n" "}")
+        self.line_3.setFrameShape(QFrame.Shape.HLine)
+        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.gridLayout.addWidget(self.line_3, 5, 0, 1, 1)
 
         self.tabWidget.addTab(self.tab_8, "")
         self.label_7 = QLabel(self.centralwidget)
@@ -207,24 +326,43 @@ class Ui_MainWindow(object):
         self.label_7.setGeometry(QRect(1180, 930, 271, 16))
         self.label_27 = QLabel(self.centralwidget)
         self.label_27.setObjectName("label_27")
-        self.label_27.setGeometry(QRect(1180, 20, 171, 61))
-        font2 = QFont()
-        font2.setPointSize(43)
-        self.label_27.setFont(font2)
+        self.label_27.setGeometry(QRect(1180, 10, 101, 91))
+        self.label_27.setFont(font)
+        self.label_27.setStyleSheet(
+            "QWidget {\n"
+            "    background-color: transparent;\n"
+            "}\n"
+            " QLabel {\n"
+            "    font-size: 32px;\n"
+            "margin-top:15px;\n"
+            "}"
+        )
         self.label_27.setAlignment(
-            Qt.AlignmentFlag.AlignBottom
-            | Qt.AlignmentFlag.AlignLeading
+            Qt.AlignmentFlag.AlignLeading
             | Qt.AlignmentFlag.AlignLeft
+            | Qt.AlignmentFlag.AlignVCenter
         )
         self.label_28 = QLabel(self.centralwidget)
         self.label_28.setObjectName("label_28")
-        self.label_28.setGeometry(QRect(1110, 10, 101, 91))
-        font3 = QFont()
-        font3.setFamilies(["Segoe Script"])
-        font3.setPointSize(60)
-        font3.setBold(False)
-        font3.setItalic(True)
-        self.label_28.setFont(font3)
+        self.label_28.setGeometry(QRect(1090, 10, 101, 91))
+        font1 = QFont()
+        font1.setFamilies(["Segoe UI"])
+        font1.setBold(False)
+        font1.setItalic(True)
+        self.label_28.setFont(font1)
+        self.label_28.setStyleSheet(
+            "QWidget {\n"
+            "    background-color: transparent;\n"
+            "}\n"
+            "QLabel {\n"
+            "    font-size: 68px;\n"
+            "}"
+        )
+        self.label_28.setAlignment(
+            Qt.AlignmentFlag.AlignRight
+            | Qt.AlignmentFlag.AlignTrailing
+            | Qt.AlignmentFlag.AlignVCenter
+        )
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -345,14 +483,14 @@ class Ui_MainWindow(object):
             self.tabWidget.indexOf(self.tab_5),
             QCoreApplication.translate("MainWindow", "GRAFICAS", None),
         )
+        self.Configuracion_Eliminar_Cuenta_Web.setText(
+            QCoreApplication.translate("MainWindow", "Eliminar cuenta web", None)
+        )
         self.Configuracion_Cambiar_Contrasena.setText(
             QCoreApplication.translate("MainWindow", "Cambiar contrase\u00f1a", None)
         )
         self.Configuracion_Crear_Cuenta_Web.setText(
             QCoreApplication.translate("MainWindow", "Crear cuenta web", None)
-        )
-        self.Configuracion_Eliminar_Cuenta_Web.setText(
-            QCoreApplication.translate("MainWindow", "Eliminar cuenta web", None)
         )
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tab_8),

@@ -14,7 +14,108 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">/* Fondo general */
+QWidget {
+    background-color: #1e1e2f;
+    color: #f0f0f0;
+    font-family: &quot;Segoe UI&quot;, Arial, sans-serif;
+    font-size: 14px;
+}
+
+/* Botones */
+QPushButton {
+    background-color: #3a3f5a;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+}
+
+QPushButton:hover {
+    background-color: #50577a;
+}
+
+QPushButton:pressed {
+    background-color: #2c3147;
+}
+
+/* Inputs */
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #2a2f45;
+    border: 1px solid #3f4662;
+    border-radius: 6px;
+    padding: 6px;
+}
+
+/* Labels */
+QLabel {
+    color: #e0e0e0;
+}
+
+/* ComboBox */
+QComboBox {
+    background-color: #2a2f45;
+    border: 1px solid #3f4662;
+    border-radius: 6px;
+    padding: 5px;
+}
+
+QComboBox::drop-down {
+    border: none;
+}
+
+/* Scrollbar */
+QScrollBar:vertical {
+    background: #1e1e2f;
+    width: 10px;
+    margin: 2px;
+}
+
+QScrollBar::handle:vertical {
+    background: #3a3f5a;
+    border-radius: 5px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #50577a;
+}
+
+/* CheckBox */
+QCheckBox {
+    spacing: 6px;
+}
+
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #6c8cff;
+    border-radius: 3px;
+}
+
+/* Tabs */
+QTabWidget::pane {
+    border: 1px solid #3f4662;
+}
+
+QTabBar::tab {
+    background: #2a2f45;
+    padding: 8px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+QTabBar::tab:selected {
+    background: #3a3f5a;
+}
+
+/* Tooltips */
+QToolTip {
+    background-color: #3a3f5a;
+    color: #ffffff;
+    border: 1px solid #6c8cff;
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -44,7 +145,8 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>14</pointsize>
+        <family>Segoe UI</family>
+        <pointsize>-1</pointsize>
        </font>
       </property>
       <property name="text">
@@ -63,6 +165,10 @@
         <height>511</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">QGroupBox{border: 1px solid #3f4662;
+}</string>
+      </property>
       <property name="title">
        <string/>
       </property>
@@ -77,7 +183,8 @@
        </property>
        <property name="font">
         <font>
-         <pointsize>10</pointsize>
+         <family>Segoe UI</family>
+         <pointsize>-1</pointsize>
         </font>
        </property>
        <property name="text">
@@ -339,18 +446,21 @@ vulnerables y sinceros con nosotros mismos. Ese resguardo privado es lo que conv
       <string>CONFIGURACIÓN</string>
      </attribute>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="Configuracion_Cambiar_Contrasena">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
+      <item row="4" column="0">
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
-        <property name="text">
-         <string>Cambiar contraseña</string>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="Line" name="line_2">
+        <property name="styleSheet">
+         <string notr="true">QWidget{border: 1px solid #3f4662;
+}</string>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignCenter</set>
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
        </widget>
       </item>
@@ -361,33 +471,12 @@ vulnerables y sinceros con nosotros mismos. Ese resguardo privado es lo que conv
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="Configuracion_Crear_Cuenta_Web">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Crear cuenta web</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="Line" name="line">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
+      <item row="6" column="0">
        <widget class="QLabel" name="Configuracion_Eliminar_Cuenta_Web">
         <property name="font">
          <font>
-          <pointsize>14</pointsize>
+          <family>Segoe UI</family>
+          <pointsize>-1</pointsize>
          </font>
         </property>
         <property name="text">
@@ -398,15 +487,58 @@ vulnerables y sinceros con nosotros mismos. Ese resguardo privado es lo que conv
         </property>
        </widget>
       </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="Configuracion_Cambiar_Contrasena">
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>-1</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Cambiar contraseña</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="Configuracion_Crear_Cuenta_Web">
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>-1</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Crear cuenta web</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="Line" name="line_3">
+        <property name="styleSheet">
+         <string notr="true">QWidget{border: 1px solid #3f4662;
+}</string>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </widget>
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>1180</x>
+      <x>1110</x>
       <y>930</y>
-      <width>271</width>
+      <width>321</width>
       <height>16</height>
      </rect>
     </property>
@@ -418,27 +550,6 @@ vulnerables y sinceros con nosotros mismos. Ese resguardo privado es lo que conv
     <property name="geometry">
      <rect>
       <x>1180</x>
-      <y>20</y>
-      <width>171</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>43</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>ryptós</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_28">
-    <property name="geometry">
-     <rect>
-      <x>1110</x>
       <y>10</y>
       <width>101</width>
       <height>91</height>
@@ -446,14 +557,56 @@ vulnerables y sinceros con nosotros mismos. Ese resguardo privado es lo que conv
     </property>
     <property name="font">
      <font>
-      <family>Segoe Script</family>
-      <pointsize>60</pointsize>
+      <family>Segoe UI</family>
+      <pointsize>-1</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: transparent;
+}
+ QLabel {
+    font-size: 32px;
+margin-top:15px;
+}</string>
+    </property>
+    <property name="text">
+     <string>ryptós</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_28">
+    <property name="geometry">
+     <rect>
+      <x>1090</x>
+      <y>10</y>
+      <width>101</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe UI</family>
+      <pointsize>-1</pointsize>
       <italic>true</italic>
       <bold>false</bold>
      </font>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: transparent;
+}
+QLabel {
+    font-size: 68px;
+}</string>
+    </property>
     <property name="text">
      <string>K</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
     </property>
    </widget>
   </widget>
