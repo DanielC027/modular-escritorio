@@ -53,6 +53,15 @@ from PySide6.QtWidgets import (
     QStatusBar,
     QWidget,
 )
+import sys
+import os
+
+# Asegurar que la raíz del proyecto está en sys.path
+root_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if root_path not in sys.path:
+    sys.path.insert(0, root_path)
+
+from recursos import recursos_rc
 
 
 class Ui_RegistroMainWindow(object):
@@ -219,17 +228,12 @@ class Ui_RegistroMainWindow(object):
         self.label_2 = QLabel(self.groupBox_2)
         self.label_2.setObjectName("label_2")
         self.label_2.setGeometry(QRect(80, 210, 21, 21))
-        self.label_2.setPixmap(
-            QPixmap("../../../../recursos/icons/inicio_sesion/user.svg")
-        )
-
+        self.label_2.setPixmap(QPixmap(":/iconos/iconos/inicio_sesion/user.svg"))
         self.label_2.setScaledContents(True)
         self.label_3 = QLabel(self.groupBox_2)
         self.label_3.setObjectName("label_3")
         self.label_3.setGeometry(QRect(80, 300, 21, 21))
-        self.label_3.setPixmap(
-            QPixmap("../../../../recursos/icons/inicio_sesion/password.svg")
-        )
+        self.label_3.setPixmap(QPixmap(":/iconos/iconos/inicio_sesion/password.svg"))
         self.label_3.setScaledContents(True)
         self.line_2 = QFrame(self.groupBox_2)
         self.line_2.setObjectName("line_2")
@@ -252,9 +256,7 @@ class Ui_RegistroMainWindow(object):
         self.label_6 = QLabel(self.groupBox_2)
         self.label_6.setObjectName("label_6")
         self.label_6.setGeometry(QRect(80, 390, 21, 21))
-        self.label_6.setPixmap(
-            QPixmap("../../../recursos/icons/inicio_sesion/password.svg")
-        )
+        self.label_6.setPixmap(QPixmap(":/iconos/iconos/inicio_sesion/password.svg"))
         self.label_6.setScaledContents(True)
         self.contrasena_2_lineEdit = QLineEdit(self.groupBox_2)
         self.contrasena_2_lineEdit.setObjectName("contrasena_2_lineEdit")

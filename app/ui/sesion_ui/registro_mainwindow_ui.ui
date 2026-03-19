@@ -269,7 +269,7 @@ QToolTip {
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap>../../../recursos/icons/inicio_sesion/user.svg</pixmap>
+         <pixmap resource="../../../recursos/recursos.qrc">:/iconos/iconos/inicio_sesion/user.svg</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -288,7 +288,7 @@ QToolTip {
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap>../../../recursos/icons/inicio_sesion/password.svg</pixmap>
+         <pixmap resource="../../../recursos/recursos.qrc">:/iconos/iconos/inicio_sesion/password.svg</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -353,7 +353,7 @@ QToolTip {
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap>../../../recursos/icons/inicio_sesion/password.svg</pixmap>
+         <pixmap resource="../../../recursos/recursos.qrc">:/iconos/iconos/inicio_sesion/password.svg</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -506,6 +506,8 @@ margin-top:15px;
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../recursos/recursos.qrc"/>
+ </resources>
  <connections/>
 </ui>

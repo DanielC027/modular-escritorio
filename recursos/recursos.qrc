@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="imagenes">
+    <file>imagenes/bg-image.jpg</file>
+  </qresource>
+  <qresource prefix="iconos">
+    <file>iconos/inicio_sesion/password.svg</file>
+    <file>iconos/inicio_sesion/user.svg</file>
+  </qresource>
+</RCC>

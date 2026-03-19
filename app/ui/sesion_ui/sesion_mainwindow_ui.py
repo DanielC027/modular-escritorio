@@ -53,6 +53,15 @@ from PySide6.QtWidgets import (
     QStatusBar,
     QWidget,
 )
+import sys
+import os
+
+# Asegurar que la raíz del proyecto está en sys.path
+root_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if root_path not in sys.path:
+    sys.path.insert(0, root_path)
+
+from recursos import recursos_rc
 
 
 class Ui_SesionMainWindow(object):
@@ -207,16 +216,12 @@ class Ui_SesionMainWindow(object):
         self.label_2 = QLabel(self.groupBox_2)
         self.label_2.setObjectName("label_2")
         self.label_2.setGeometry(QRect(80, 210, 21, 21))
-        self.label_2.setPixmap(
-            QPixmap("../../../../recursos/icons/inicio_sesion/user.svg")
-        )
+        self.label_2.setPixmap(QPixmap(":/iconos/iconos/inicio_sesion/user.svg"))
         self.label_2.setScaledContents(True)
         self.label_3 = QLabel(self.groupBox_2)
         self.label_3.setObjectName("label_3")
         self.label_3.setGeometry(QRect(80, 300, 21, 21))
-        self.label_3.setPixmap(
-            QPixmap("../../../../recursos/icons/inicio_sesion/password.svg")
-        )
+        self.label_3.setPixmap(QPixmap(":/iconos/iconos/inicio_sesion/password.svg"))
         self.label_3.setScaledContents(True)
         self.registrarse_pushButton = QPushButton(self.groupBox_2)
         self.registrarse_pushButton.setObjectName("registrarse_pushButton")
