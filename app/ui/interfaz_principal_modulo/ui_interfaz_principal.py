@@ -7,11 +7,11 @@ from .gestor_escritos.gestor_escritos_ui import GestorEscritosUI
 
 
 class UiInterfazPrincipal(QMainWindow):
-    def __init__(self):
+    def __init__(self, datos):
         super().__init__()
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
         # self.gestorEscritos = GestorEscritosUI(self.ui, GestorAnalisis, GestorEscritos)
-        self.gestorEscritos = GestorEscritosUI(self.ui)
+        self.gestorEscritos = GestorEscritosUI(self.ui, datos)

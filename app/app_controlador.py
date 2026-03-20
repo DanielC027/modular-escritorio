@@ -58,12 +58,12 @@ class AppControlador:
         self.registro_interfaz.close()
         self.mostrar_inicio()
 
-    def mostrar_interfaz_principal(self):
+    def mostrar_interfaz_principal(self, datos):
         if self.sesion_interfaz:
             self.sesion_interfaz.close()
 
         if self.registro_interfaz:
             self.registro_interfaz.close()
 
-        self.interfaz_principal = UiInterfazPrincipal()
+        self.interfaz_principal = UiInterfazPrincipal(datos)
         self.interfaz_principal.show()

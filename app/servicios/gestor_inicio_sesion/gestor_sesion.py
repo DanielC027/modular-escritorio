@@ -38,7 +38,7 @@ class GestorSesion:
         # Revisar si existe usuario y control de criptografia creados en la bd
         if es_tabla_vacia_usuario() or es_tabla_vacia_controlcrypto():
             # Si no existe regresar a REGISTRO
-            return ESTADO["SIN_REGISTRO"]
+            return {"estado": ESTADO["SIN_REGISTRO"], "sal": ""}
 
         # --- Obtener usuario por usuario sal, payload_a, iv_a, payload_b, iv_b de la bd
         # id perosna
@@ -99,7 +99,7 @@ class GestorSesion:
         try:
             resultado_a = encripta_modulo.desencriptar(contrasena, datos_a)
             print(resultado_a)
-            return ESTADO["AUTENTICADO"]
+            return {"estado": ESTADO["AUTENTICADO"], "sal": datos_a["sal"]}
         except Exception as ex:
             print("Error a: ", ex)
 
@@ -107,10 +107,10 @@ class GestorSesion:
         try:
             resultado_b = encripta_modulo.desencriptar(contrasena, datos_b)
             print(resultado_b)
-            return ESTADO["AUTENTICADO"]
+            return {"estado": ESTADO["AUTENTICADO"], "sal": datos_b["sal"]}
         except Exception as ex:
             print("Error b: ", ex)
-            return ESTADO["NO_AUTENTICADO"]
+            return {"estado": ESTADO["NO_AUTENTICADO"], "sal": ""}
 
     def RegistrarUsuario(self, usuario, contrasena_1, contrasena_2):
         """Registrar usuario"""

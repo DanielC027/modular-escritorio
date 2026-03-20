@@ -53,8 +53,9 @@ def crear_tablas():
         CREATE TABLE IF NOT EXISTS ESCRITO (
             ID_Escrito INTEGER PRIMARY KEY AUTOINCREMENT,
             ID_Usuario INTEGER NOT NULL,
-            Fecha TEXT NOT NULL, -- ISO 8601
-            Contenido BLOB NOT NULL,
+            FECHA TEXT NOT NULL, -- ISO 8601
+            CONTENIDO BLOB NOT NULL,
+            HUELLA_DIGITAL BLOB NOT NULL,
 
             FOREIGN KEY (ID_Usuario)
                 REFERENCES USUARIO(ID_Usuario)

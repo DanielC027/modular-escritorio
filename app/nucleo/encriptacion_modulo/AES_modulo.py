@@ -2,6 +2,8 @@ from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import PBKDF2
 from Crypto.Random import get_random_bytes
 import base64
+import hashlib
+import hmac
 
 
 class AESCifrado:
@@ -42,3 +44,6 @@ class AESCifrado:
 
     def obtener_payload_aleatorio(self) -> str:
         return base64.b64encode(get_random_bytes(16)).decode()
+
+    def generar_HMAC(self, contrasena, msj):
+        return hmac.new(contrasena, msj.encode(), hashlib.sha256).digest()

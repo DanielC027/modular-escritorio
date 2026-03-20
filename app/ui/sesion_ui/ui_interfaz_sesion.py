@@ -6,7 +6,7 @@ from ...servicios.gestor_inicio_sesion.gestor_sesion import GestorSesion
 
 class UiInterfazSesion(QMainWindow):
     necesita_registro = Signal()
-    inicio_satisfactorio = Signal()
+    inicio_satisfactorio = Signal(object)
 
     def __init__(self):
         super().__init__()
@@ -31,19 +31,33 @@ class UiInterfazSesion(QMainWindow):
 
         if not usuario or not contrasena:
             msgBox = QMessageBox()
-            msgBox.critical(self.ui.centralwidget, "Error", "Usuario o Contraseña incorrecta, intenta de nuevo.")
+            msgBox.critical(
+                self.ui.centralwidget,
+                "Error",
+                "Usuario o Contraseña incorrecta, intenta de nuevo.",
+            )
             return
 
         gestor_sesion = GestorSesion()
         respuesta = gestor_sesion.IniciarSesion(usuario, contrasena)
-
-        if respuesta == ESTADO["SIN_REGISTRO"]:
+        # desde gestor sesion se envia el estado y la sal en caso de haber desencriptado
+        if respuesta["estado"] == ESTADO["SIN_REGISTRO"]:
             self.necesita_registro.emit()
-        elif respuesta == ESTADO["AUTENTICADO"]:
-            self.inicio_satisfactorio.emit()
-        elif respuesta == ESTADO["NO_AUTENTICADO"]:
+        elif respuesta["estado"] == ESTADO["AUTENTICADO"]:
+            # datos para poder manipular escritos
+            datos = {
+                "usuario": usuario,
+                "contrasena": contrasena,
+                "sal": respuesta["sal"],
+            }
+            self.inicio_satisfactorio.emit(datos)
+        elif respuesta["estado"] == ESTADO["NO_AUTENTICADO"]:
             msgBox = QMessageBox()
-            msgBox.critical(self.ui.centralwidget, "Error", "Usuario o Contraseña incorrecta, intenta de nuevo.")
+            msgBox.critical(
+                self.ui.centralwidget,
+                "Error",
+                "Usuario o Contraseña incorrecta, intenta de nuevo.",
+            )
 
     @Slot()
     def registrarse(self):
