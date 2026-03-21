@@ -55,6 +55,7 @@ def crear_tablas():
             ID_Usuario INTEGER NOT NULL,
             FECHA TEXT NOT NULL, -- ISO 8601
             CONTENIDO BLOB NOT NULL,
+            IV BLOB NOT NULL,
             HUELLA_DIGITAL BLOB NOT NULL,
 
             FOREIGN KEY (ID_Usuario)

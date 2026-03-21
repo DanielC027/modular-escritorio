@@ -63,7 +63,10 @@ class UiInterfazSesion(QMainWindow):
     def registrarse(self):
         if GestorSesion().ExisteCuenta():
             msgBox = QMessageBox()
-            msgBox.setText("Cuenta ya creada.")
-            msgBox.exec()
+            msgBox.critical(
+                self.ui.centralwidget,
+                "ERROR",
+                "Cuenta ya creada.",
+            )
         else:
             self.necesita_registro.emit()

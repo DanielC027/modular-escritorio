@@ -201,16 +201,16 @@ def eliminar_cuenta_web(id_cuenta_web):
 """ TABLA ESCRITO """
 
 
-def crear_escrito(id_usuario, fecha, contenido):
+def crear_escrito(id_usuario, fecha, contenido, iv, huella_digital):
     try:
         with obtener_conexion() as conn:
             cursor = conn.cursor()
             cursor.execute(
                 """
-                INSERT INTO ESCRITO (ID_Usuario, Fecha, Contenido)
-                VALUES (?, ?, ?);
+                INSERT INTO ESCRITO (ID_Usuario, Fecha, Contenido, IV, HUELLA_DIGITAL)
+                VALUES (?, ?, ?, ?, ?);
                 """,
-                (id_usuario, fecha, contenido),
+                (id_usuario, fecha, contenido, iv, huella_digital),
             )
             conn.commit()
     except Exception as ex:
@@ -254,6 +254,19 @@ def eliminar_escrito(id_escrito):
             conn.commit()
     except Exception as ex:
         print("Error al eliminar escrito:", ex)
+
+
+def mostrar_lista_escritos_en_bd(huella_digital):
+    try:
+        with obtener_conexion() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT ID_ESCRITO, FECHA FROM ESCRITO WHERE HUELLA_DIGITAL = ? ORDER BY FECHA DESC;",
+                (huella_digital,),
+            )
+            return cursor.fetchall()
+    except Exception as ex:
+        print("Error al obtener escritos:", ex)
 
 
 """ TABLA ANALISIS """

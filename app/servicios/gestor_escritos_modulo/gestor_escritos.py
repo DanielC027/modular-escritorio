@@ -2,9 +2,11 @@ from datetime import date
 
 from ...bd.repositorios.usuario_repo import (
     obtener_usuario_por_usuario,
-    mostrar_usuario_por_id,
 )
-from ...bd.repositorios.escrito_repo import crear_escrito
+from ...bd.repositorios.escrito_repo import (
+    crear_escrito,
+    mostrar_lista_escritos,
+)
 from ...nucleo.encriptacion_modulo.AES_modulo import AESCifrado
 
 import base64
@@ -15,23 +17,40 @@ class GestorEscritos:
         self.aes_modulo = AESCifrado()
 
     def GuardarEscrito(self, fecha: date, contenido, datos):
-        # Encriptar escrito
-        # Generar huella digital
-        # Guardar escrito
-        datos_usuario = obtener_usuario_por_usuario(datos["usuario"])
-        print(datos_usuario)
-        print(datos)
-        print(f"fecha: {fecha}, contenido: {contenido}")
-        print(
-            datos["contrasena"].encode()
-        )  # continuar con la creacion y almacenamiento de huella digital, para despues
-        # guardar los escritos completamente, todo el escrito, luego crear la lectura, creacion, y eliminacion de escritos
-        print(
-            base64.b64encode(
-                (self.aes_modulo.generar_HMAC(datos["contrasena"].encode(), "hmac"))
+        try:
+            # ===== Encriptar escrito =====
+            contenido_encriptado = self.aes_modulo.encriptar(
+                datos["contrasena"], contenido
             )
-        )
-        # base64.b64encode(sal).decode()
+            # print(contenido_encriptado)
+            # ===== Generar huella digital =====
+            clave_generada_huella_digital = self.aes_modulo.generar_HMAC(
+                datos["sal"].encode(), "hmac"
+            )
+            huella_digital = self.aes_modulo.generar_HMAC(
+                clave_generada_huella_digital, "hmac"
+            )
+            # ===== Guardar escrito =====
+            id_usuario_bd = obtener_usuario_por_usuario(datos["usuario"])
+            fecha_bd = fecha
+            contenido_bd = (
+                contenido_encriptado["sal"]
+                + "|"
+                + contenido_encriptado["nonce"]
+                + "|"
+                + contenido_encriptado["texto"]
+            )
+            iv_bd = contenido_encriptado["tag"]
+            huella_digital_bd = base64.b64encode(huella_digital)
+            print(huella_digital_bd)
+            # Enviar datos para la bd tabla escrito para crear uno
+            crear_escrito(
+                id_usuario_bd, fecha_bd, contenido_bd, iv_bd, huella_digital_bd
+            )
+            return True
+        except Exception as ex:
+            print(ex)
+            return False
 
     def LeerEscrito(self):
         pass
@@ -42,5 +61,23 @@ class GestorEscritos:
     def EliminarEscrito(self):
         pass
 
-    def MostrarListaEscritos(self):
-        pass
+    def MostrarListaEscritos(self, datos):
+        try:
+            # ===== Generar huella digital =====
+            clave_generada_huella_digital = self.aes_modulo.generar_HMAC(
+                datos["sal"].encode(), "hmac"
+            )
+            huella_digital = self.aes_modulo.generar_HMAC(
+                clave_generada_huella_digital, "hmac"
+            )
+            huella_digital_bd = base64.b64encode(huella_digital)
+            # ===== Buscar escritos =====
+            # Buscar todos los escritos que corresponden a la huella digital
+            escritos = mostrar_lista_escritos(huella_digital_bd)
+            print(huella_digital_bd)
+            for escrito in escritos:
+                print(escrito["ID_ESCRITO"], " ", escrito["FECHA"])
+            return True
+        except Exception as ex:
+            print(ex)
+            return False

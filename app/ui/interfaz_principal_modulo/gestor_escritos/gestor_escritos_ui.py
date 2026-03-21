@@ -28,6 +28,7 @@ class GestorEscritosUI:
         self.datos = datos
         # Conectar botones
         self.ui.Escritos_Guardar_pushButton.clicked.connect(self.guardar_escrito)
+        self.ui.Escritos_Eliminar_pushButton.clicked.connect(self.eliminar_escrito)
 
     @Slot()
     def NuevoEscrito(self):
@@ -41,21 +42,36 @@ class GestorEscritosUI:
             print("Generando análisis...")
 
             # Ejecutar análisis en QThread
-            self.gestor_escritos.GuardarEscrito(date.today(), texto, self.datos)
+            resultado = self.gestor_escritos.GuardarEscrito(
+                date.today(), texto, self.datos
+            )
 
             self.trabajad = Trabajador(self.gestor_analisis.analizar_texto, texto)
             self.trabajad.resultado.connect(self.graficar_analisis)
             self.trabajad.error.connect(self.error_proceso)
             self.trabajad.start()
 
-            QMessageBox.information(
-                self.ui.centralwidget,
-                "Información",
-                "Se ha guardado el escrito y se detectaron las emociones.",
-            )
+            if resultado:
+                QMessageBox.information(
+                    self.ui.centralwidget,
+                    "Información",
+                    "Se ha guardado el escrito y se detectaron las emociones.",
+                )
+            else:
+                msgBox = QMessageBox()
+                msgBox.critical(
+                    self.ui.centralwidget,
+                    "Error",
+                    "No fue posible crear el escrito u analizarlo.",
+                )
+
         except Exception as ex:
             print(f"Error: {ex}")
             self.error_proceso()
+
+    @Slot()
+    def eliminar_escrito(self):
+        self.gestor_escritos.MostrarListaEscritos(self.datos)
 
     @Slot()
     def graficar_analisis(self, resultado):
