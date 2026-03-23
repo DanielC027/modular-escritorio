@@ -37,7 +37,7 @@ class UiInterfazRegistro(QMainWindow):
             gestor_sesion.RegistrarUsuario(usuario, contrasena_1, contrasena_2)
 
             msgBox = QMessageBox()
-            msgBox.Information(
+            msgBox.information(
                 self.ui.centralwidget, "INFORMATION", "Cuenta creada exitosamente."
             )
 

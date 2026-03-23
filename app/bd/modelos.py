@@ -269,6 +269,18 @@ def mostrar_lista_escritos_en_bd(huella_digital):
         print("Error al obtener escritos:", ex)
 
 
+def revisar_existe_fecha_guardada(huella_digital, fecha):
+    try:
+        with obtener_conexion() as conn:
+            resultado = conn.execute(
+                "SELECT EXISTS (SELECT 1 FROM ESCRITO WHERE HUELLA_DIGITAL = ? AND FECHA = ?);",
+                (huella_digital, fecha),
+            ).fetchone()[0]
+            return bool(resultado)
+    except Exception as ex:
+        print("Error al revisar si existe escrito:", ex)
+
+
 """ TABLA ANALISIS """
 
 

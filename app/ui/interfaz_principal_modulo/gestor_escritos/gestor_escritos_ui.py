@@ -13,10 +13,14 @@ from PySide6.QtGui import QBrush, QColor
 from PySide6.QtCore import Qt, Slot
 
 from ..mainwindow_ui import Ui_MainWindow
+from .gestor_tree_widget import GestorTreeWidget
+
 
 from ....servicios.gestor_analisis_modulo.gestor_analisis import GestorAnalisis
 from ....servicios.gestor_escritos_modulo.gestor_escritos import GestorEscritos
 from ....nucleo.hilo_modulo.trabajador_modulo import Trabajador
+
+from .selector_fecha_ui import SelectorFecha
 
 
 class GestorEscritosUI:
@@ -24,15 +28,36 @@ class GestorEscritosUI:
         self.ui = ui
         self.gestor_analisis = GestorAnalisis()
         self.gestor_escritos = GestorEscritos()
+        self.gestor_treewidget = GestorTreeWidget(self.ui)
 
         self.datos = datos
         # Conectar botones
+        self.ui.Escritos_Nuevo_pushButton.clicked.connect(self.nuevo_escrito)
         self.ui.Escritos_Guardar_pushButton.clicked.connect(self.guardar_escrito)
         self.ui.Escritos_Eliminar_pushButton.clicked.connect(self.eliminar_escrito)
 
     @Slot()
-    def NuevoEscrito(self):
-        print("Nuevo escrito")
+    def nuevo_escrito(self):
+        dialogo = SelectorFecha()
+        resultado = dialogo.exec()
+        if resultado:  # Usuario - Aceptar
+            fecha = dialogo.obtener_fecha().toString("yyyy-MM-dd")
+            print("Fecha seleccionada:", fecha)
+            if not self.gestor_escritos.RevisarExisteFechaGuardada(
+                fecha, self.datos
+            ):  # Si no existe fecha guardada
+                print(
+                    "Poner la fecha en memoria para ser guardada con el escrito\n ademas: poner la fecha en el treewidget*"
+                )
+            else:
+                msgBox = QMessageBox()
+                msgBox.critical(
+                    self.ui.centralwidget,
+                    "Error",
+                    "Ya existe esa fecha guardada.",
+                )
+        else:
+            print("Cancelado")
 
     @Slot()
     def guardar_escrito(self):

@@ -4,6 +4,7 @@ from ..modelos import (
     actualizar_escrito,
     eliminar_escrito,
     mostrar_lista_escritos_en_bd,
+    revisar_existe_fecha_guardada,
 )
 
 
@@ -25,3 +26,7 @@ def eliminar_escrito_usuario(id_escrito):
 
 def mostrar_lista_escritos(huella_digital):
     return mostrar_lista_escritos_en_bd(huella_digital)
+
+
+def existe_fecha_guardada(huella_digital, fecha):
+    return revisar_existe_fecha_guardada(huella_digital, fecha)

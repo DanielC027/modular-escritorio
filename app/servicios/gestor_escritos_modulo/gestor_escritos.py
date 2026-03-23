@@ -6,6 +6,7 @@ from ...bd.repositorios.usuario_repo import (
 from ...bd.repositorios.escrito_repo import (
     crear_escrito,
     mostrar_lista_escritos,
+    existe_fecha_guardada,
 )
 from ...nucleo.encriptacion_modulo.AES_modulo import AESCifrado
 
@@ -78,6 +79,22 @@ class GestorEscritos:
             for escrito in escritos:
                 print(escrito["ID_ESCRITO"], " ", escrito["FECHA"])
             return True
+        except Exception as ex:
+            print(ex)
+            return False
+
+    def RevisarExisteFechaGuardada(self, fecha, datos):
+        try:
+            # ===== Generar huella digital =====
+            clave_generada_huella_digital = self.aes_modulo.generar_HMAC(
+                datos["sal"].encode(), "hmac"
+            )
+            huella_digital = self.aes_modulo.generar_HMAC(
+                clave_generada_huella_digital, "hmac"
+            )
+            huella_digital_bd = base64.b64encode(huella_digital)
+            # ===== Buscar existencia de escrito =====
+            return existe_fecha_guardada(huella_digital_bd, fecha)
         except Exception as ex:
             print(ex)
             return False
