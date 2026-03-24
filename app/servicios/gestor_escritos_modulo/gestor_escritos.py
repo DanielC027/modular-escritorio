@@ -7,6 +7,7 @@ from ...bd.repositorios.escrito_repo import (
     crear_escrito,
     mostrar_lista_escritos,
     existe_fecha_guardada,
+    obtener_escrito,
 )
 from ...nucleo.encriptacion_modulo.AES_modulo import AESCifrado
 
@@ -53,8 +54,45 @@ class GestorEscritos:
             print(ex)
             return False
 
-    def LeerEscrito(self):
-        pass
+    def LeerEscrito(self, fecha, datos):
+        try:
+            # ===== Generar huella digital =====
+            clave_generada_huella_digital = self.aes_modulo.generar_HMAC(
+                datos["sal"].encode(), "hmac"
+            )
+            huella_digital = self.aes_modulo.generar_HMAC(
+                clave_generada_huella_digital, "hmac"
+            )
+            # ===== Obtener escrito =====
+            fecha_bd = fecha
+            contenido = obtener_escrito(huella_digital, fecha_bd)
+            for escrito in contenido:
+                print(escrito)
+            print(contenido)
+            # obtener formato
+            """contenido_bd = (
+                contenido_encriptado["sal"]
+                + "|"
+                + contenido_encriptado["nonce"]
+                + "|"
+                + contenido_encriptado["texto"]
+            )
+            iv_bd = contenido_encriptado["tag"]
+            huella_digital_bd = base64.b64encode(huella_digital)
+            print(huella_digital_bd)
+            # Enviar datos para la bd tabla escrito para crear uno
+            crear_escrito(
+                id_usuario_bd, fecha_bd, contenido_bd, iv_bd, huella_digital_bd
+            )
+            # ===== Desencriptar escrito =====
+            contenido_encriptado = self.aes_modulo.encriptar(
+                datos["contrasena"], contenido
+            )"""
+            # print(contenido_encriptado)
+            return True
+        except Exception as ex:
+            print(ex)
+            return False
 
     def ActualizarEscrito(self):
         pass

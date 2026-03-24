@@ -189,6 +189,8 @@ class GestorEscritosUI:
             return  # aun no guardado
 
         print("Abrir fecha:", fecha)
+        contenido = self.gestor_escritos.LeerEscrito(fecha, self.datos)
+        print(contenido)
 
         # Cargar escrito a text edit
         self.ui.Escritos_Escrito_textEdit.setPlainText(f"Contenido de {fecha}")
