@@ -65,13 +65,13 @@ QComboBox::drop-down {
 
 /* Scrollbar */
 QScrollBar:vertical {
-    background: #1e1e2f;
+    background: #000;
     width: 10px;
     margin: 2px;
 }
 
 QScrollBar::handle:vertical {
-    background: #3a3f5a;
+    background: #15152f;
     border-radius: 5px;
 }
 
@@ -326,19 +326,6 @@ vulnerables y sinceros con nosotros mismos. Ese resguardo privado es lo que conv
      <attribute name="title">
       <string>GRAFICAS</string>
      </attribute>
-     <widget class="QRadioButton" name="Graficas_Anio_radioButton">
-      <property name="geometry">
-       <rect>
-        <x>580</x>
-        <y>670</y>
-        <width>92</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>AÑO</string>
-      </property>
-     </widget>
      <widget class="QDateEdit" name="Graficas_Fecha_dateEdit">
       <property name="geometry">
        <rect>
@@ -378,53 +365,11 @@ vulnerables y sinceros con nosotros mismos. Ese resguardo privado es lo que conv
      <widget class="QGraphicsView" name="Graficas_Grafica_graphicsView">
       <property name="geometry">
        <rect>
-        <x>440</x>
-        <y>20</y>
-        <width>761</width>
-        <height>621</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QRadioButton" name="Graficas_Mes_radioButton">
-      <property name="geometry">
-       <rect>
-        <x>710</x>
-        <y>670</y>
-        <width>61</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>MES</string>
-      </property>
-     </widget>
-     <widget class="QRadioButton" name="Graficas_Semana_radioButton">
-      <property name="geometry">
-       <rect>
         <x>820</x>
-        <y>670</y>
-        <width>92</width>
-        <height>20</height>
+        <y>450</y>
+        <width>391</width>
+        <height>271</height>
        </rect>
-      </property>
-      <property name="text">
-       <string>SEMANA</string>
-      </property>
-     </widget>
-     <widget class="QRadioButton" name="Graficas_Dia_radioButton">
-      <property name="geometry">
-       <rect>
-        <x>950</x>
-        <y>670</y>
-        <width>92</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>DÍA</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
       </property>
      </widget>
      <widget class="QLabel" name="label_8">
@@ -438,6 +383,112 @@ vulnerables y sinceros con nosotros mismos. Ese resguardo privado es lo que conv
       </property>
       <property name="text">
        <string>Selección:</string>
+      </property>
+     </widget>
+     <widget class="QGraphicsView" name="Graficas_Grafica_Semana_graphicsView_2">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>450</y>
+        <width>391</width>
+        <height>271</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QGraphicsView" name="Graficas_Grafica_Mes_graphicsView_2">
+      <property name="geometry">
+       <rect>
+        <x>810</x>
+        <y>80</y>
+        <width>391</width>
+        <height>271</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QGraphicsView" name="Graficas_Grafica_Anio_graphicsView_2">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>80</y>
+        <width>391</width>
+        <height>271</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>1010</x>
+        <y>40</y>
+        <width>49</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>MES</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>30</y>
+        <width>49</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>AÑO</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>390</y>
+        <width>81</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>SEMANA</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>1010</x>
+        <y>390</y>
+        <width>49</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>-1</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>DÍA</string>
       </property>
      </widget>
     </widget>
@@ -536,10 +587,10 @@ vulnerables y sinceros con nosotros mismos. Ese resguardo privado es lo que conv
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>1110</x>
+      <x>1030</x>
       <y>930</y>
-      <width>321</width>
-      <height>16</height>
+      <width>401</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">

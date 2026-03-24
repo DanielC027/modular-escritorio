@@ -261,7 +261,7 @@ def mostrar_lista_escritos_en_bd(huella_digital):
         with obtener_conexion() as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "SELECT ID_ESCRITO, FECHA FROM ESCRITO WHERE HUELLA_DIGITAL = ? ORDER BY FECHA DESC;",
+                "SELECT FECHA FROM ESCRITO WHERE HUELLA_DIGITAL = ? ORDER BY FECHA DESC;",
                 (huella_digital,),
             )
             return cursor.fetchall()

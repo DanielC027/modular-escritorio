@@ -77,11 +77,14 @@ class GestorEscritos:
             escritos = mostrar_lista_escritos(huella_digital_bd)
             print(huella_digital_bd)
             for escrito in escritos:
-                print(escrito["ID_ESCRITO"], " ", escrito["FECHA"])
-            return True
+                print(" ", escrito["FECHA"])
+
+            lista_fechas = [escrito["FECHA"] for escrito in escritos]
+            print(lista_fechas)
+            return lista_fechas
         except Exception as ex:
             print(ex)
-            return False
+            return []
 
     def RevisarExisteFechaGuardada(self, fecha, datos):
         try:

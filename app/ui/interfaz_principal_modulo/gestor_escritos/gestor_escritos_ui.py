@@ -33,6 +33,7 @@ class GestorEscritosUI:
         self.gestor_escritos = GestorEscritos()
         self.gestor_treewidget = GestorTreeWidget(self.ui)
 
+        self.cargar_tree_widget_al_iniciar()
         # ----- CONEXIONES -----
         self.ui.Escritos_Nuevo_pushButton.clicked.connect(self.nuevo_escrito)
         self.ui.Escritos_Guardar_pushButton.clicked.connect(self.guardar_escrito)
@@ -41,6 +42,11 @@ class GestorEscritosUI:
         self.ui.Escritos_Escritos_treeWidget.itemClicked.connect(self.on_item_click)
 
         self.ui.Escritos_Escrito_textEdit.setEnabled(False)
+
+    def cargar_tree_widget_al_iniciar(self):
+        lista_escritos = self.gestor_escritos.MostrarListaEscritos(self.datos)
+        print(lista_escritos)
+        self.gestor_treewidget.cargar_todas_las_fechas(lista_escritos)
 
     # ----- VALIDACIONES -----
     def validar_cambios_sin_guardar(self):
@@ -61,6 +67,8 @@ class GestorEscritosUI:
 
             if not self.validar_cambios_sin_guardar():
                 return
+            else:
+                self.guardar_escrito()
 
             dialogo = SelectorFecha()
             resultado = dialogo.exec()

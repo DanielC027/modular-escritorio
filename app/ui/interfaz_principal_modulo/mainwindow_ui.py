@@ -52,7 +52,6 @@ from PySide6.QtWidgets import (
     QLabel,
     QMainWindow,
     QPushButton,
-    QRadioButton,
     QSizePolicy,
     QTabWidget,
     QTextEdit,
@@ -120,13 +119,13 @@ class Ui_MainWindow(object):
             "/* Scrollbar */\n"
             "QScrollBar:vertical {\n"
             "    backg"
-            "round: #1e1e2f;\n"
+            "round: #000;\n"
             "    width: 10px;\n"
             "    margin: 2px;\n"
             "}\n"
             "\n"
             "QScrollBar::handle:vertical {\n"
-            "    background: #3a3f5a;\n"
+            "    background: #15152f;\n"
             "    border-radius: 5px;\n"
             "}\n"
             "\n"
@@ -226,9 +225,6 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab_2, "")
         self.tab_5 = QWidget()
         self.tab_5.setObjectName("tab_5")
-        self.Graficas_Anio_radioButton = QRadioButton(self.tab_5)
-        self.Graficas_Anio_radioButton.setObjectName("Graficas_Anio_radioButton")
-        self.Graficas_Anio_radioButton.setGeometry(QRect(580, 670, 92, 20))
         self.Graficas_Fecha_dateEdit = QDateEdit(self.tab_5)
         self.Graficas_Fecha_dateEdit.setObjectName("Graficas_Fecha_dateEdit")
         self.Graficas_Fecha_dateEdit.setGeometry(QRect(180, 140, 113, 24))
@@ -242,20 +238,43 @@ class Ui_MainWindow(object):
         self.Graficas_Grafica_graphicsView.setObjectName(
             "Graficas_Grafica_graphicsView"
         )
-        self.Graficas_Grafica_graphicsView.setGeometry(QRect(440, 20, 761, 621))
-        self.Graficas_Mes_radioButton = QRadioButton(self.tab_5)
-        self.Graficas_Mes_radioButton.setObjectName("Graficas_Mes_radioButton")
-        self.Graficas_Mes_radioButton.setGeometry(QRect(710, 670, 61, 20))
-        self.Graficas_Semana_radioButton = QRadioButton(self.tab_5)
-        self.Graficas_Semana_radioButton.setObjectName("Graficas_Semana_radioButton")
-        self.Graficas_Semana_radioButton.setGeometry(QRect(820, 670, 92, 20))
-        self.Graficas_Dia_radioButton = QRadioButton(self.tab_5)
-        self.Graficas_Dia_radioButton.setObjectName("Graficas_Dia_radioButton")
-        self.Graficas_Dia_radioButton.setGeometry(QRect(950, 670, 92, 20))
-        self.Graficas_Dia_radioButton.setChecked(True)
+        self.Graficas_Grafica_graphicsView.setGeometry(QRect(820, 450, 391, 271))
         self.label_8 = QLabel(self.tab_5)
         self.label_8.setObjectName("label_8")
         self.label_8.setGeometry(QRect(110, 100, 61, 16))
+        self.Graficas_Grafica_Semana_graphicsView_2 = QGraphicsView(self.tab_5)
+        self.Graficas_Grafica_Semana_graphicsView_2.setObjectName(
+            "Graficas_Grafica_Semana_graphicsView_2"
+        )
+        self.Graficas_Grafica_Semana_graphicsView_2.setGeometry(
+            QRect(340, 450, 391, 271)
+        )
+        self.Graficas_Grafica_Mes_graphicsView_2 = QGraphicsView(self.tab_5)
+        self.Graficas_Grafica_Mes_graphicsView_2.setObjectName(
+            "Graficas_Grafica_Mes_graphicsView_2"
+        )
+        self.Graficas_Grafica_Mes_graphicsView_2.setGeometry(QRect(810, 80, 391, 271))
+        self.Graficas_Grafica_Anio_graphicsView_2 = QGraphicsView(self.tab_5)
+        self.Graficas_Grafica_Anio_graphicsView_2.setObjectName(
+            "Graficas_Grafica_Anio_graphicsView_2"
+        )
+        self.Graficas_Grafica_Anio_graphicsView_2.setGeometry(QRect(350, 80, 391, 271))
+        self.label_2 = QLabel(self.tab_5)
+        self.label_2.setObjectName("label_2")
+        self.label_2.setGeometry(QRect(1010, 40, 49, 16))
+        self.label_2.setFont(font)
+        self.label_3 = QLabel(self.tab_5)
+        self.label_3.setObjectName("label_3")
+        self.label_3.setGeometry(QRect(440, 30, 49, 16))
+        self.label_3.setFont(font)
+        self.label_4 = QLabel(self.tab_5)
+        self.label_4.setObjectName("label_4")
+        self.label_4.setGeometry(QRect(430, 390, 81, 16))
+        self.label_4.setFont(font)
+        self.label_5 = QLabel(self.tab_5)
+        self.label_5.setObjectName("label_5")
+        self.label_5.setGeometry(QRect(1010, 390, 49, 16))
+        self.label_5.setFont(font)
         self.tabWidget.addTab(self.tab_5, "")
         self.tab_8 = QWidget()
         self.tab_8.setObjectName("tab_8")
@@ -323,7 +342,7 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab_8, "")
         self.label_7 = QLabel(self.centralwidget)
         self.label_7.setObjectName("label_7")
-        self.label_7.setGeometry(QRect(1180, 930, 271, 16))
+        self.label_7.setGeometry(QRect(1030, 930, 401, 20))
         self.label_27 = QLabel(self.centralwidget)
         self.label_27.setObjectName("label_27")
         self.label_27.setGeometry(QRect(1180, 10, 101, 91))
@@ -463,22 +482,14 @@ class Ui_MainWindow(object):
             self.tabWidget.indexOf(self.tab_2),
             QCoreApplication.translate("MainWindow", "ESCRITOS", None),
         )
-        self.Graficas_Anio_radioButton.setText(
-            QCoreApplication.translate("MainWindow", "A\u00d1O", None)
-        )
         self.label.setText(QCoreApplication.translate("MainWindow", "Fecha:", None))
-        self.Graficas_Mes_radioButton.setText(
-            QCoreApplication.translate("MainWindow", "MES", None)
-        )
-        self.Graficas_Semana_radioButton.setText(
-            QCoreApplication.translate("MainWindow", "SEMANA", None)
-        )
-        self.Graficas_Dia_radioButton.setText(
-            QCoreApplication.translate("MainWindow", "D\u00cdA", None)
-        )
         self.label_8.setText(
             QCoreApplication.translate("MainWindow", "Selecci\u00f3n:", None)
         )
+        self.label_2.setText(QCoreApplication.translate("MainWindow", "MES", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", "A\u00d1O", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", "SEMANA", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", "D\u00cdA", None))
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tab_5),
             QCoreApplication.translate("MainWindow", "GRAFICAS", None),

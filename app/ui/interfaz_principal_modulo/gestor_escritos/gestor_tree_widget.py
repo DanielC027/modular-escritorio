@@ -3,7 +3,6 @@ from PySide6.QtGui import QColor
 from PySide6.QtCore import Qt
 
 
-# FALTA CARGAR EL TREE WIDGET AL ABRIR LA APP
 class GestorTreeWidget:
     def __init__(self, ui):
         self.ui = ui
@@ -13,11 +12,9 @@ class GestorTreeWidget:
         self.fecha_actual = None
         self.sin_guardar = False
 
-        self.tree.expandAll()
+        self.tree.expandAll()  # Quitar al final
 
-    # -------------------------
-    # UTILIDADES INTERNAS
-    # -------------------------
+    # ----- UTILIDADES INTERNAS -----
     def _obtener_o_crear_item(self, parent, texto):
         for i in range(parent.childCount()):
             if parent.child(i).text(0) == texto:
@@ -39,9 +36,7 @@ class GestorTreeWidget:
         self.tree.addTopLevelItem(item)
         return item
 
-    # -------------------------
-    # FUNCIONES PRINCIPALES
-    # -------------------------
+    # ----- FUNCIONES PRINCIPALES -----
     def agregar_fecha_sin_guardar(self, fecha):
         # fecha: "2026-02-05"
         anio, mes, dia = fecha.split("-")
@@ -112,4 +107,4 @@ class GestorTreeWidget:
 
             self.items_por_fecha[fecha] = dia_item
 
-        self.tree.expandAll()
+        self.tree.expandAll()  # Quitar al final
