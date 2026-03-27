@@ -44,7 +44,7 @@ class GestorEscritos:
             )
             iv_bd = contenido_encriptado["tag"]
             huella_digital_bd = base64.b64encode(huella_digital)
-            print(huella_digital_bd)
+            #print(huella_digital_bd)
             # Enviar datos para la bd tabla escrito para crear uno
             crear_escrito(
                 id_usuario_bd, fecha_bd, contenido_bd, iv_bd, huella_digital_bd
@@ -63,36 +63,23 @@ class GestorEscritos:
             huella_digital = self.aes_modulo.generar_HMAC(
                 clave_generada_huella_digital, "hmac"
             )
+            huella_digital_bd = base64.b64encode(huella_digital)
             # ===== Obtener escrito =====
             fecha_bd = fecha
-            contenido = obtener_escrito(huella_digital, fecha_bd)
-            for escrito in contenido:
-                print(escrito)
-            print(contenido)
+            #print(f"Leer escrito - Gestor escritos - {huella_digital_bd} {fecha}")
+            contenido = obtener_escrito(huella_digital_bd, fecha_bd)
             # obtener formato
-            """contenido_bd = (
-                contenido_encriptado["sal"]
-                + "|"
-                + contenido_encriptado["nonce"]
-                + "|"
-                + contenido_encriptado["texto"]
-            )
-            iv_bd = contenido_encriptado["tag"]
-            huella_digital_bd = base64.b64encode(huella_digital)
-            print(huella_digital_bd)
-            # Enviar datos para la bd tabla escrito para crear uno
-            crear_escrito(
-                id_usuario_bd, fecha_bd, contenido_bd, iv_bd, huella_digital_bd
-            )
-            # ===== Desencriptar escrito =====
-            contenido_encriptado = self.aes_modulo.encriptar(
-                datos["contrasena"], contenido
-            )"""
-            # print(contenido_encriptado)
-            return True
+            sal_contenido_bd,nonce_contenido_bd,texto_contenido_bd = contenido["CONTENIDO"].split("|")
+            tag_bd = contenido["IV"]
+            datos_bd = {"sal":sal_contenido_bd,"nonce":nonce_contenido_bd,"tag":tag_bd,"texto":texto_contenido_bd}
+            #print(datos_bd)
+            contenido_desencriptado = self.aes_modulo.desencriptar(datos["contrasena"],datos_bd)
+            #print(f" contenido desencriptado bd: {contenido_desencriptado}")
+            
+            return contenido_desencriptado
         except Exception as ex:
             print(ex)
-            return False
+            return ""
 
     def ActualizarEscrito(self):
         pass
@@ -113,12 +100,12 @@ class GestorEscritos:
             # ===== Buscar escritos =====
             # Buscar todos los escritos que corresponden a la huella digital
             escritos = mostrar_lista_escritos(huella_digital_bd)
-            print(huella_digital_bd)
+            #print(huella_digital_bd)
             for escrito in escritos:
                 print(" ", escrito["FECHA"])
 
             lista_fechas = [escrito["FECHA"] for escrito in escritos]
-            print(lista_fechas)
+            #print(lista_fechas)
             return lista_fechas
         except Exception as ex:
             print(ex)

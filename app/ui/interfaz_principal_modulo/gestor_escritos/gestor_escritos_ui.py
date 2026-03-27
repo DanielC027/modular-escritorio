@@ -188,12 +188,18 @@ class GestorEscritosUI:
         if "*" in item.text(0):
             return  # aun no guardado
 
-        print("Abrir fecha:", fecha)
+        #print("Abrir fecha:", fecha)
         contenido = self.gestor_escritos.LeerEscrito(fecha, self.datos)
-        print(contenido)
-
+        #print(contenido)
+        if not contenido:
+            QMessageBox.critical(
+                self.ui.centralwidget,
+                "Error",
+                "No fue posible obtener el escrito.",
+            )
+            self.ui.Escritos_Escrito_textEdit.setDisabled(True)
         # Cargar escrito a text edit
-        self.ui.Escritos_Escrito_textEdit.setPlainText(f"Contenido de {fecha}")
+        self.ui.Escritos_Escrito_textEdit.setPlainText(contenido)
         self.ui.Escritos_Escrito_textEdit.setEnabled(True)
 
     @Slot()

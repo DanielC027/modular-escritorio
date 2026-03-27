@@ -222,10 +222,10 @@ def obtener_escrito_de_bd(huella_digital, fecha):
         with obtener_conexion() as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "SELECT * FROM ESCRITO WHERE HUELLA_DIGITAL = ? AND FECHA = ?",
+                "SELECT * FROM ESCRITO WHERE HUELLA_DIGITAL = ? AND FECHA = ?;",
                 (huella_digital, fecha),
             )
-            return cursor.fetchall()
+            return cursor.fetchone()
     except Exception as ex:
         print("Error al obtener escritos:", ex)
 
@@ -238,7 +238,7 @@ def obtener_escritos(id_usuario):
                 "SELECT * FROM ESCRITO WHERE ID_Usuario = ? ORDER BY Fecha DESC;",
                 (id_usuario,),
             )
-            return cursor.fetchall()
+            return cursor.fetchone()
     except Exception as ex:
         print("Error al obtener escritos:", ex)
 
