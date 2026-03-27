@@ -36,7 +36,7 @@ class GestorEscritosUI:
         self.cargar_tree_widget_al_iniciar()
         # ----- CONEXIONES -----
         self.ui.Escritos_Nuevo_pushButton.clicked.connect(self.nuevo_escrito)
-        self.ui.Escritos_Guardar_pushButton.clicked.connect(self.guardar_escrito)
+        self.ui.Escritos_Guardar_pushButton.clicked.connect(self.llamar_guardar)
         self.ui.Escritos_Eliminar_pushButton.clicked.connect(self.eliminar_escrito)
 
         self.ui.Escritos_Escritos_treeWidget.itemClicked.connect(self.on_item_click)
@@ -68,7 +68,7 @@ class GestorEscritosUI:
             if not self.validar_cambios_sin_guardar():
                 return
             else:
-                self.guardar_escrito()
+                self.llamar_guardar()
 
             dialogo = SelectorFecha()
             resultado = dialogo.exec()
@@ -100,8 +100,11 @@ class GestorEscritosUI:
             )
 
     # ----- GUARDAR -----
+    def llamar_guardar(self):
+        asyncio.run(self.guardar_escrito())
+
     @Slot()
-    def guardar_escrito(self):
+    async def guardar_escrito(self):
         try:
             if not self.gestor_treewidget.fecha_actual:
                 QMessageBox.warning(
@@ -110,6 +113,10 @@ class GestorEscritosUI:
                     "No hay ningún escrito en edición.",
                 )
                 return
+            
+            self.ui.Escritos_Nuevo_pushButton.setEnabled(False)
+            self.ui.Escritos_Guardar_pushButton.setEnabled(False)
+            self.ui.Escritos_Eliminar_pushButton.setEnabled(False)
 
             texto = self.ui.Escritos_Escrito_textEdit.toPlainText()
 
@@ -122,13 +129,11 @@ class GestorEscritosUI:
                 return
 
             fecha = self.gestor_treewidget.fecha_actual
-
+            print("aqui si llega")
             resultado = self.gestor_escritos.GuardarEscrito(fecha, texto, self.datos)
-
-            self.trabajad = Trabajador(self.gestor_analisis.analizar_texto, texto)
-            self.trabajad.resultado.connect(self.graficar_analisis)
-            self.trabajad.error.connect(self.error_proceso)
-            self.trabajad.start()
+            print("si entro")
+            analizar_texto = asyncio.create_task(self.iniciar_analisis(texto))
+            await analizar_texto
 
             if resultado:
                 self.gestor_treewidget.actualizar_fecha_guardada(fecha)
@@ -143,18 +148,41 @@ class GestorEscritosUI:
                 QMessageBox.critical(
                     self.ui.centralwidget,
                     "Error",
-                    "No fue posible crear el escrito o analizarlo.",
+                    "No fue posible crear el escrito.",
                 )
+
+            self.ui.Escritos_Nuevo_pushButton.setEnabled(True)
+            self.ui.Escritos_Guardar_pushButton.setEnabled(True)
+            self.ui.Escritos_Eliminar_pushButton.setEnabled(True)
+
 
         except Exception as ex:
             print(f"Error: {ex}")
             QMessageBox.critical(
                 self.ui.centralwidget,
                 "Error",
-                "No fue posible crear el escrito o analizarlo.",
+                f"No fue posible crear el escrito o analizarlo. {ex}",
             )
+            self.ui.Escritos_Nuevo_pushButton.setEnabled(True)
+            self.ui.Escritos_Guardar_pushButton.setEnabled(True)
+            self.ui.Escritos_Eliminar_pushButton.setEnabled(True)
             self.error_proceso()
 
+    def iniciar_analisis(self, texto):
+            try:
+                self.trabajad = Trabajador(self.gestor_analisis.analizar_texto, texto)
+                self.trabajad.resultado.connect(self.graficar_analisis)
+                self.trabajad.error.connect(self.error_proceso)
+                self.trabajad.start()
+            except Exception as ex:
+                print(ex)
+                QMessageBox.critical(
+                    self.ui.centralwidget,
+                    "Error",
+                    f"No fue posible analizarlo. {ex}",
+                )
+
+        
     # ----- ELIMINAR -----
     @Slot()
     def eliminar_escrito(self):
