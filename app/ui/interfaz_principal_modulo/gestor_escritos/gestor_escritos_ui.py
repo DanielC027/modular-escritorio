@@ -1,7 +1,7 @@
 import torch
 import json
-import asyncio
 from datetime import date
+import time
 
 from PySide6.QtWidgets import (
     QGraphicsScene,
@@ -15,12 +15,10 @@ from PySide6.QtCore import Qt, Slot
 from ..mainwindow_ui import Ui_MainWindow
 from .gestor_tree_widget import GestorTreeWidget
 
-
 from ....servicios.gestor_analisis_modulo.gestor_analisis import GestorAnalisis
 from ....servicios.gestor_escritos_modulo.gestor_escritos import GestorEscritos
 from ....nucleo.hilo_modulo.trabajador_modulo import Trabajador
 
-from ....servicios.gestor_escritos_modulo.gestor_escritos import GestorEscritos
 from .selector_fecha_ui import SelectorFecha
 
 
@@ -34,6 +32,7 @@ class GestorEscritosUI:
         self.gestor_treewidget = GestorTreeWidget(self.ui)
 
         self.cargar_tree_widget_al_iniciar()
+
         # ----- CONEXIONES -----
         self.ui.Escritos_Nuevo_pushButton.clicked.connect(self.nuevo_escrito)
         self.ui.Escritos_Guardar_pushButton.clicked.connect(self.llamar_guardar)
@@ -64,7 +63,6 @@ class GestorEscritosUI:
     @Slot()
     def nuevo_escrito(self):
         try:
-
             if not self.validar_cambios_sin_guardar():
                 return
             else:
@@ -81,7 +79,6 @@ class GestorEscritosUI:
                 ):
                     self.gestor_treewidget.agregar_fecha_sin_guardar(fecha)
 
-                    # Limpiar editor
                     self.ui.Escritos_Escrito_textEdit.clear()
                     self.ui.Escritos_Escrito_textEdit.setEnabled(True)
                 else:
@@ -92,8 +89,7 @@ class GestorEscritosUI:
                     )
         except Exception as ex:
             print(ex)
-            msgBox = QMessageBox()
-            msgBox.critical(
+            QMessageBox.critical(
                 self.ui.centralwidget,
                 "Error",
                 "Error al crear escrito para editar.",
@@ -101,10 +97,10 @@ class GestorEscritosUI:
 
     # ----- GUARDAR -----
     def llamar_guardar(self):
-        asyncio.run(self.guardar_escrito())
+        self.guardar_escrito()
 
     @Slot()
-    async def guardar_escrito(self):
+    def guardar_escrito(self):
         try:
             if not self.gestor_treewidget.fecha_actual:
                 QMessageBox.warning(
@@ -113,7 +109,8 @@ class GestorEscritosUI:
                     "No hay ningún escrito en edición.",
                 )
                 return
-            
+
+            # Desactivar botones
             self.ui.Escritos_Nuevo_pushButton.setEnabled(False)
             self.ui.Escritos_Guardar_pushButton.setEnabled(False)
             self.ui.Escritos_Eliminar_pushButton.setEnabled(False)
@@ -126,35 +123,27 @@ class GestorEscritosUI:
                     "Aviso",
                     "El escrito está vacío.",
                 )
+                self.reactivar_botones()
                 return
 
             fecha = self.gestor_treewidget.fecha_actual
-            print("aqui si llega")
+
+            print("Guardando escrito...")
             resultado = self.gestor_escritos.GuardarEscrito(fecha, texto, self.datos)
-            print("si entro")
-            analizar_texto = asyncio.create_task(self.iniciar_analisis(texto))
-            await analizar_texto
 
-            if resultado:
-                self.gestor_treewidget.actualizar_fecha_guardada(fecha)
-
-                QMessageBox.information(
-                    self.ui.centralwidget,
-                    "Guardado",
-                    "Se ha guardado el escrito y se detectaron las emociones.",
-                )
-                self.ui.Escritos_Escrito_textEdit.setEnabled(False)
-            else:
+            if not resultado:
                 QMessageBox.critical(
                     self.ui.centralwidget,
                     "Error",
                     "No fue posible crear el escrito.",
                 )
+                self.reactivar_botones()
+                return
 
-            self.ui.Escritos_Nuevo_pushButton.setEnabled(True)
-            self.ui.Escritos_Guardar_pushButton.setEnabled(True)
-            self.ui.Escritos_Eliminar_pushButton.setEnabled(True)
+            self.fecha_guardada_actual = fecha
 
+            print("Iniciando análisis...")
+            self.iniciar_analisis(texto)
 
         except Exception as ex:
             print(f"Error: {ex}")
@@ -163,26 +152,62 @@ class GestorEscritosUI:
                 "Error",
                 f"No fue posible crear el escrito o analizarlo. {ex}",
             )
-            self.ui.Escritos_Nuevo_pushButton.setEnabled(True)
-            self.ui.Escritos_Guardar_pushButton.setEnabled(True)
-            self.ui.Escritos_Eliminar_pushButton.setEnabled(True)
-            self.error_proceso()
+            self.reactivar_botones()
 
     def iniciar_analisis(self, texto):
-            try:
-                self.trabajad = Trabajador(self.gestor_analisis.analizar_texto, texto)
-                self.trabajad.resultado.connect(self.graficar_analisis)
-                self.trabajad.error.connect(self.error_proceso)
-                self.trabajad.start()
-            except Exception as ex:
-                print(ex)
-                QMessageBox.critical(
-                    self.ui.centralwidget,
-                    "Error",
-                    f"No fue posible analizarlo. {ex}",
-                )
+        try:
+            self.trabajador = Trabajador(self.gestor_analisis.analizar_texto, texto)
+            self.trabajador.resultado.connect(self.analisis_completado)
+            self.trabajador.error.connect(self.error_analisis)
+            self.trabajador.finished.connect(self.trabajador.deleteLater)
+            self.trabajador.start()
+        except Exception as ex:
+            print(ex)
+            QMessageBox.critical(
+                self.ui.centralwidget,
+                "Error",
+                f"No fue posible analizarlo. {ex}",
+            )
+            self.reactivar_botones()
 
-        
+    @Slot()
+    def analisis_completado(self, resultado):
+        try:
+            print("Análisis completado")
+
+            self.graficar_analisis(resultado)
+
+            self.gestor_treewidget.actualizar_fecha_guardada(self.fecha_guardada_actual)
+
+            QMessageBox.information(
+                self.ui.centralwidget,
+                "Guardado",
+                "Se ha guardado el escrito y se detectaron las emociones.",
+            )
+
+            self.ui.Escritos_Escrito_textEdit.setEnabled(False)
+
+        except Exception as ex:
+            print(f"Error en análisis: {ex}")
+            self.error_proceso()
+
+        finally:
+            self.reactivar_botones()
+
+    @Slot()
+    def error_analisis(self):
+        QMessageBox.critical(
+            self.ui.centralwidget,
+            "Error",
+            "¡Error durante el análisis!",
+        )
+        self.reactivar_botones()
+
+    def reactivar_botones(self):
+        self.ui.Escritos_Nuevo_pushButton.setEnabled(True)
+        self.ui.Escritos_Guardar_pushButton.setEnabled(True)
+        self.ui.Escritos_Eliminar_pushButton.setEnabled(True)
+
     # ----- ELIMINAR -----
     @Slot()
     def eliminar_escrito(self):
@@ -208,17 +233,16 @@ class GestorEscritosUI:
         if not self.validar_cambios_sin_guardar():
             return
 
-        fecha = item.data(0, 0x0100)  # Qt.UserRole
+        fecha = item.data(0, 0x0100)
 
         if not fecha:
             return
 
         if "*" in item.text(0):
-            return  # aun no guardado
+            return
 
-        #print("Abrir fecha:", fecha)
         contenido = self.gestor_escritos.LeerEscrito(fecha, self.datos)
-        #print(contenido)
+
         if not contenido:
             QMessageBox.critical(
                 self.ui.centralwidget,
@@ -226,7 +250,7 @@ class GestorEscritosUI:
                 "No fue posible obtener el escrito.",
             )
             self.ui.Escritos_Escrito_textEdit.setDisabled(True)
-        # Cargar escrito a text edit
+
         self.ui.Escritos_Escrito_textEdit.setPlainText(contenido)
         self.ui.Escritos_Escrito_textEdit.setEnabled(True)
 
@@ -243,39 +267,38 @@ class GestorEscritosUI:
                     "surprise": "sorpresa",
                     "others": "otros",
                 }
+
                 COLORES_EMOCIONES = {
-                    "anger": "#e74c3c",  # rojo
-                    "disgust": "#27ae60",  # verde
-                    "fear": "#8e44ad",  # morado
-                    "joy": "#f1c40f",  # amarillo
-                    "sadness": "#3498db",  # azul
-                    "surprise": "#e67e22",  # naranja
-                    "others": "#95a5a6",  # gris
+                    "anger": "#e74c3c",
+                    "disgust": "#27ae60",
+                    "fear": "#8e44ad",
+                    "joy": "#f1c40f",
+                    "sadness": "#3498db",
+                    "surprise": "#e67e22",
+                    "others": "#95a5a6",
                 }
+
                 probabilidades = resultado["probabilidades"]
                 etiquetas = [
                     resultado["etiquetas"][i] for i in range(len(probabilidades))
                 ]
 
-                # Convertir tensor a lista de floats
                 if isinstance(probabilidades, torch.Tensor):
                     probs_lista = probabilidades.tolist()
                 else:
                     probs_lista = list(probabilidades)
 
-                # Graficar barras
                 scene = QGraphicsScene()
                 self.ui.Graficas_Grafica_graphicsView.setScene(scene)
 
                 bar_width = 50
                 spacing = 30
-                max_height = 300  # altura máxima de la barra
+                max_height = 300
 
                 for i, prob in enumerate(probs_lista):
                     height = prob * max_height
                     etiqueta_en = str(etiquetas[i])
 
-                    # Color según emoción
                     color_barra = COLORES_EMOCIONES.get(etiqueta_en, "#7f8c8d")
 
                     rect = QGraphicsRectItem(
@@ -288,17 +311,14 @@ class GestorEscritosUI:
                     rect.setPen(Qt.NoPen)
                     scene.addItem(rect)
 
-                    # Traducción
                     etiqueta_esp = TRADUCCION_ETIQUETAS.get(etiqueta_en, etiqueta_en)
 
-                    # Texto etiqueta (BLANCO)
                     text = QGraphicsTextItem(etiqueta_esp)
                     text.setPos(i * (bar_width + spacing), max_height + 5)
                     text.setTextWidth(bar_width)
                     text.setDefaultTextColor(QColor("white"))
                     scene.addItem(text)
 
-                    # Valor encima (BLANCO)
                     value_text = QGraphicsTextItem(f"{prob:.3f}")
                     value_text.setPos(
                         i * (bar_width + spacing), max_height - height - 20
@@ -311,18 +331,19 @@ class GestorEscritosUI:
                     0, 0, len(probs_lista) * (bar_width + spacing), max_height + 50
                 )
 
-            mensaje = {
-                "tipo": "analisis_emociones",
-                "timestamp": int(
-                    asyncio.get_event_loop().time()
-                ),  # usar asyncio solo en hilo
-                "valores": {
-                    "probabilidades": probs_lista,
-                    "etiquetas": [TRADUCCION_ETIQUETAS.get(e, e) for e in etiquetas],
-                },
-            }
+                mensaje = {
+                    "tipo": "analisis_emociones",
+                    "timestamp": int(time.time()),
+                    "valores": {
+                        "probabilidades": probs_lista,
+                        "etiquetas": [
+                            TRADUCCION_ETIQUETAS.get(e, e) for e in etiquetas
+                        ],
+                    },
+                }
 
-            self.gestor_analisis.enviar_datos_ws(mensaje)
+                self.gestor_analisis.enviar_datos_ws(mensaje)
+
         except Exception as ex:
             print("Error graficando análisis:", ex)
             self.error_proceso()
