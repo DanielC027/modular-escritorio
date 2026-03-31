@@ -24,7 +24,12 @@ class UiInterfazRegistro(QMainWindow):
             contrasena_1 = self.ui.contrasena_1_lineEdit.text()
             contrasena_2 = self.ui.contrasena_2_lineEdit.text()
 
-            if not usuario or not contrasena_1 or not contrasena_2:
+            if (
+                not usuario
+                or not contrasena_1
+                or not contrasena_2
+                or contrasena_1 == contrasena_2
+            ):
                 msgBox = QMessageBox()
                 msgBox.critical(
                     self.ui.centralwidget,
