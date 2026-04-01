@@ -1,7 +1,6 @@
-import torch
 import json
 from datetime import date
-import time
+
 
 from PySide6.QtWidgets import (
     QGraphicsScene,
@@ -13,9 +12,11 @@ from PySide6.QtGui import QBrush, QColor
 from PySide6.QtCore import Qt, Slot
 
 from ..mainwindow_ui import Ui_MainWindow
+from .gestor_graficas_analisis_ui import GestorGraficasAnalisisUI
 from .gestor_tree_widget import GestorTreeWidget
 
 from ....servicios.gestor_analisis_modulo.gestor_analisis import GestorAnalisis
+
 from ....servicios.gestor_escritos_modulo.gestor_escritos import GestorEscritos
 from ....nucleo.hilo_modulo.trabajador_modulo import Trabajador
 
@@ -26,6 +27,8 @@ class GestorEscritosUI:
     def __init__(self, ui: Ui_MainWindow, datos):
         self.ui = ui
         self.datos = datos
+
+        self.gestor_analisis_ui = GestorGraficasAnalisisUI(self.ui)
 
         self.gestor_analisis = GestorAnalisis()
         self.gestor_escritos = GestorEscritos()
@@ -307,95 +310,12 @@ class GestorEscritosUI:
     @Slot()
     def graficar_analisis(self, resultado):
         try:
-            if "probabilidades" in resultado and "etiquetas" in resultado:
-                TRADUCCION_ETIQUETAS = {
-                    "anger": "enojo",
-                    "disgust": "asco",
-                    "fear": "miedo",
-                    "joy": "alegría",
-                    "sadness": "tristeza",
-                    "surprise": "sorpresa",
-                    "others": "otros",
-                }
-
-                COLORES_EMOCIONES = {
-                    "anger": "#e74c3c",
-                    "disgust": "#27ae60",
-                    "fear": "#8e44ad",
-                    "joy": "#f1c40f",
-                    "sadness": "#3498db",
-                    "surprise": "#e67e22",
-                    "others": "#95a5a6",
-                }
-
-                probabilidades = resultado["probabilidades"]
-                etiquetas = [
-                    resultado["etiquetas"][i] for i in range(len(probabilidades))
-                ]
-
-                if isinstance(probabilidades, torch.Tensor):
-                    probs_lista = probabilidades.tolist()
-                else:
-                    probs_lista = list(probabilidades)
-
-                scene = QGraphicsScene()
-                self.ui.Graficas_Grafica_graphicsView.setScene(scene)
-
-                bar_width = 50
-                spacing = 30
-                max_height = 300
-
-                for i, prob in enumerate(probs_lista):
-                    height = prob * max_height
-                    etiqueta_en = str(etiquetas[i])
-
-                    color_barra = COLORES_EMOCIONES.get(etiqueta_en, "#7f8c8d")
-
-                    rect = QGraphicsRectItem(
-                        i * (bar_width + spacing),
-                        max_height - height,
-                        bar_width,
-                        height,
-                    )
-                    rect.setBrush(QBrush(QColor(color_barra)))
-                    rect.setPen(Qt.NoPen)
-                    scene.addItem(rect)
-
-                    etiqueta_esp = TRADUCCION_ETIQUETAS.get(etiqueta_en, etiqueta_en)
-
-                    text = QGraphicsTextItem(etiqueta_esp)
-                    text.setPos(i * (bar_width + spacing), max_height + 5)
-                    text.setTextWidth(bar_width)
-                    text.setDefaultTextColor(QColor("white"))
-                    scene.addItem(text)
-
-                    value_text = QGraphicsTextItem(f"{prob:.3f}")
-                    value_text.setPos(
-                        i * (bar_width + spacing), max_height - height - 20
-                    )
-                    value_text.setTextWidth(bar_width)
-                    value_text.setDefaultTextColor(QColor("white"))
-                    scene.addItem(value_text)
-
-                scene.setSceneRect(
-                    0, 0, len(probs_lista) * (bar_width + spacing), max_height + 50
-                )
-
-                mensaje = {
-                    "tipo": "analisis_emociones",
-                    "timestamp": int(time.time()),
-                    "valores": {
-                        "probabilidades": probs_lista,
-                        "etiquetas": [
-                            TRADUCCION_ETIQUETAS.get(e, e) for e in etiquetas
-                        ],
-                    },
-                }
-
-                self.gestor_analisis.enviar_datos_ws(mensaje)
-
+            self.gestor_analisis_ui.graficar_dia(resultado)
+            self.gestor_analisis_ui.graficar_semana(resultado)
+            self.gestor_analisis_ui.graficar_mes(resultado)
+            self.gestor_analisis_ui.graficar_anio(resultado)
         except Exception as ex:
-            print("Error graficando análisis:", ex)
+            print(ex)
             self.error_proceso()
 
     @Slot()

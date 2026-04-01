@@ -45,7 +45,6 @@ from PySide6.QtWidgets import (
     QDateEdit,
     QDateTimeEdit,
     QFrame,
-    QGraphicsView,
     QGridLayout,
     QGroupBox,
     QHeaderView,
@@ -234,47 +233,43 @@ class Ui_MainWindow(object):
         self.label = QLabel(self.tab_5)
         self.label.setObjectName("label")
         self.label.setGeometry(QRect(130, 140, 41, 21))
-        self.Graficas_Grafica_graphicsView = QGraphicsView(self.tab_5)
-        self.Graficas_Grafica_graphicsView.setObjectName(
-            "Graficas_Grafica_graphicsView"
-        )
-        self.Graficas_Grafica_graphicsView.setGeometry(QRect(820, 450, 391, 271))
         self.label_8 = QLabel(self.tab_5)
         self.label_8.setObjectName("label_8")
         self.label_8.setGeometry(QRect(110, 100, 61, 16))
-        self.Graficas_Grafica_Semana_graphicsView_2 = QGraphicsView(self.tab_5)
-        self.Graficas_Grafica_Semana_graphicsView_2.setObjectName(
-            "Graficas_Grafica_Semana_graphicsView_2"
-        )
-        self.Graficas_Grafica_Semana_graphicsView_2.setGeometry(
-            QRect(340, 450, 391, 271)
-        )
-        self.Graficas_Grafica_Mes_graphicsView_2 = QGraphicsView(self.tab_5)
-        self.Graficas_Grafica_Mes_graphicsView_2.setObjectName(
-            "Graficas_Grafica_Mes_graphicsView_2"
-        )
-        self.Graficas_Grafica_Mes_graphicsView_2.setGeometry(QRect(810, 80, 391, 271))
-        self.Graficas_Grafica_Anio_graphicsView_2 = QGraphicsView(self.tab_5)
-        self.Graficas_Grafica_Anio_graphicsView_2.setObjectName(
-            "Graficas_Grafica_Anio_graphicsView_2"
-        )
-        self.Graficas_Grafica_Anio_graphicsView_2.setGeometry(QRect(350, 80, 391, 271))
         self.label_2 = QLabel(self.tab_5)
         self.label_2.setObjectName("label_2")
-        self.label_2.setGeometry(QRect(1010, 40, 49, 16))
+        self.label_2.setGeometry(QRect(1150, 20, 49, 16))
         self.label_2.setFont(font)
         self.label_3 = QLabel(self.tab_5)
         self.label_3.setObjectName("label_3")
-        self.label_3.setGeometry(QRect(440, 30, 49, 16))
+        self.label_3.setGeometry(QRect(590, 20, 49, 16))
         self.label_3.setFont(font)
         self.label_4 = QLabel(self.tab_5)
         self.label_4.setObjectName("label_4")
-        self.label_4.setGeometry(QRect(430, 390, 81, 16))
+        self.label_4.setGeometry(QRect(580, 390, 81, 16))
         self.label_4.setFont(font)
         self.label_5 = QLabel(self.tab_5)
         self.label_5.setObjectName("label_5")
-        self.label_5.setGeometry(QRect(1010, 390, 49, 16))
+        self.label_5.setGeometry(QRect(1150, 390, 49, 16))
         self.label_5.setFont(font)
+        self.anio_graphic_widget = QWidget(self.tab_5)
+        self.anio_graphic_widget.setObjectName("anio_graphic_widget")
+        self.anio_graphic_widget.setGeometry(QRect(330, 60, 531, 311))
+        self.mes_graphic_widget = QWidget(self.tab_5)
+        self.mes_graphic_widget.setObjectName("mes_graphic_widget")
+        self.mes_graphic_widget.setGeometry(QRect(890, 60, 531, 311))
+        self.semana_graphic_widget = QWidget(self.tab_5)
+        self.semana_graphic_widget.setObjectName("semana_graphic_widget")
+        self.semana_graphic_widget.setGeometry(QRect(330, 430, 531, 311))
+        self.dia_graphic_widget = QWidget(self.tab_5)
+        self.dia_graphic_widget.setObjectName("dia_graphic_widget")
+        self.dia_graphic_widget.setGeometry(QRect(890, 430, 531, 311))
+        self.label_6 = QLabel(self.tab_5)
+        self.label_6.setObjectName("label_6")
+        self.label_6.setGeometry(QRect(50, 520, 221, 16))
+        self.emociones_recurrentes_label = QLabel(self.tab_5)
+        self.emociones_recurrentes_label.setObjectName("emociones_recurrentes_label")
+        self.emociones_recurrentes_label.setGeometry(QRect(70, 570, 49, 16))
         self.tabWidget.addTab(self.tab_5, "")
         self.tab_8 = QWidget()
         self.tab_8.setObjectName("tab_8")
@@ -490,6 +485,12 @@ class Ui_MainWindow(object):
         self.label_3.setText(QCoreApplication.translate("MainWindow", "A\u00d1O", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", "SEMANA", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", "D\u00cdA", None))
+        self.label_6.setText(
+            QCoreApplication.translate("MainWindow", "EMOCIONES RECURRENTES", None)
+        )
+        self.emociones_recurrentes_label.setText(
+            QCoreApplication.translate("MainWindow", "-", None)
+        )
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tab_5),
             QCoreApplication.translate("MainWindow", "GRAFICAS", None),

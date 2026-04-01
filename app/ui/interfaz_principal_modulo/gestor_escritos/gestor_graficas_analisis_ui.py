@@ -2,30 +2,174 @@ from PySide6.QtWidgets import QGraphicsScene, QGraphicsRectItem, QGraphicsTextIt
 from PySide6.QtGui import QBrush, QColor
 from PySide6.QtCore import Qt, Slot
 
+import unicodedata
+
+import time
+import torch
+
+from PySide6.QtWidgets import (
+    QGraphicsScene,
+    QGraphicsRectItem,
+    QGraphicsTextItem,
+    QMessageBox,
+)
+from PySide6.QtGui import QBrush, QColor
+from PySide6.QtCore import Qt, Slot
 
 from ..mainwindow_ui import Ui_MainWindow
 from ....servicios.gestor_analisis_modulo.gestor_analisis import GestorAnalisis
+
+import pyqtgraph as pg
+from PySide6.QtWidgets import QVBoxLayout
 
 
 class GestorGraficasAnalisisUI(object):
     def __init__(self, ui: Ui_MainWindow):
         self.ui = ui
-
         self.gestor_analisis = GestorAnalisis()
-        # self.gestor_escritos = GestorEscritos()
 
-        self.ui.Escritos_Guardar_pushButton.clicked.connect(self.analizar_escrito)
+    def graficar_dia(self, resultado):
+        self.graficar_analisis_qt(resultado, self.ui.dia_graphic_widget)
+
+    def graficar_semana(self, resultado):
+        self.graficar_analisis_qt(resultado, self.ui.semana_graphic_widget)
+
+    def graficar_mes(self, resultado):
+        self.graficar_analisis_qt(resultado, self.ui.mes_graphic_widget)
+
+    def graficar_anio(self, resultado):
+        self.graficar_analisis_qt(resultado, self.ui.anio_graphic_widget)
+
+    def graficar_analisis_qt(self, resultado, graphic_widget):
+        try:
+            if "probabilidades" in resultado and "etiquetas" in resultado:
+
+                TRADUCCION_ETIQUETAS = {
+                    "anger": "enojo",
+                    "disgust": "asco",
+                    "fear": "miedo",
+                    "joy": "alegría",
+                    "sadness": "tristeza",
+                    "surprise": "sorpresa",
+                    "others": "otros",
+                }
+
+                COLORES_EMOCIONES = {
+                    "anger": "#e74c3c",
+                    "disgust": "#27ae60",
+                    "fear": "#8e44ad",
+                    "joy": "#f1c40f",
+                    "sadness": "#3498db",
+                    "surprise": "#e67e22",
+                    "others": "#95a5a6",
+                }
+
+                probabilidades = resultado["probabilidades"]
+                etiquetas = [
+                    resultado["etiquetas"][i] for i in range(len(probabilidades))
+                ]
+
+                # convertir tensor si aplica
+                if isinstance(probabilidades, torch.Tensor):
+                    probs_lista = probabilidades.tolist()
+                else:
+                    probs_lista = list(probabilidades)
+
+                # limpiar widget anterior
+                if graphic_widget.layout() is not None:
+                    while graphic_widget.layout().count():
+                        item = graphic_widget.layout().takeAt(0)
+                        widget = item.widget()
+                        if widget is not None:
+                            widget.deleteLater()
+                else:
+                    graphic_widget.setLayout(QVBoxLayout())
+
+                layout = graphic_widget.layout()
+
+                # crear gráfica
+                plot = pg.PlotWidget()
+                layout.addWidget(plot)
+
+                x = list(range(len(probs_lista)))
+
+                brushes_color = []
+                etiquetas_es = []
+                print(etiquetas)
+                for e in etiquetas:
+                    e = self.limpiar_etiqueta(e)
+                    color = COLORES_EMOCIONES.get(e, "#7f8c8d")
+                    print(color)
+                    brushes_color.append(pg.mkBrush(QColor(color)))
+
+                    etiquetas_es.append(TRADUCCION_ETIQUETAS.get(e, e))
+                print(brushes_color)
+                # barras
+                bg = pg.BarGraphItem(
+                    x=x, height=probs_lista, width=0.6, brushes=brushes_color
+                )
+
+                plot.addItem(bg)
+
+                # etiquetas eje X
+                axis = plot.getAxis("bottom")
+                axis.setTextPen("white")
+                axis.setTicks([list(zip(x, etiquetas_es))])
+
+                axis_left = plot.getAxis("left")
+                axis_left.setTextPen("white")
+
+                # AGREGAR PORCENTAJES ARRIBA DE CADA BARRA
+                for i, prob in enumerate(probs_lista):
+                    porcentaje = f"{prob * 100:.1f}%"
+
+                    texto = pg.TextItem(
+                        text=porcentaje,
+                        anchor=(0.5, 1),  # centrado arriba
+                        color="white",
+                    )
+
+                    texto.setPos(i, prob)
+                    plot.addItem(texto)
+
+                plot.setYRange(0, 1)
+                plot.setTitle("Análisis de emociones", color="white")
+                plot.setLabel("left", "Probabilidad", color="white")
+                plot.setLabel("bottom", "Emoción", color="white")
+                plot.setBackground(QColor("#2a2a40"))
+
+            mensaje = {
+                "tipo": "analisis_emociones",
+                "timestamp": int(time.time()),
+                "valores": {
+                    "probabilidades": probs_lista,
+                    "etiquetas": [TRADUCCION_ETIQUETAS.get(e, e) for e in etiquetas],
+                },
+            }
+            self.guardar_analisis_bd(mensaje)
+            self.gestor_analisis.enviar_datos_ws(mensaje)
+
+        except Exception as ex:
+            print("Error graficando:", ex)
+            self.error_proceso()
+
+    def guardar_analisis_bd(self, analisis):
+        try:
+            print(analisis)
+            self.gestor_analisis.guardar_analisis(analisis)
+        except Exception as ex:
+            print(ex)
+            self.error_proceso()
 
     @Slot()
-    def analizar_escrito(self, texto):
-        print("Generando analisis...")
+    def error_proceso(self):
+        QMessageBox.critical(
+            self.ui.centralwidget,
+            "ERROR",
+            "¡Ha ocurrido un error durante el análisis o el guardado!",
+        )
 
-        resultado = self.gestor_analisis.analizar_texto(texto)
-        print(resultado)
-        print("Analisis generado.")
-
-        self.graficar_analisis(resultado)
-
-    @Slot()
-    def graficar_analisis(self, resultado):
-        pass
+    def limpiar_etiqueta(self, e):
+        e = str(e).lower().strip()
+        e = unicodedata.normalize("NFKD", e)
+        return e

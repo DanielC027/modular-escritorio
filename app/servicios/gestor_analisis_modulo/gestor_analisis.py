@@ -46,3 +46,18 @@ class GestorAnalisis:
 
         # Ejecutar en el loop del hilo
         asyncio.run_coroutine_threadsafe(enviar_ws(), self.loop)
+
+    def guardar_analisis(self, analisis):
+        # crear analisis escrito
+        # obtener id_analisis
+        # recorrer emociones
+        #     emocion por emocion
+        # revisar si ya existe la emocion
+        #     si: nada
+        #     no: guardarla
+        # revisar si existe lista emociones
+        #     si: registrar emocion en lista
+        #     no: CREAR LISTA EMOCIONES CON ID_ANALISIS
+        #          registrar emocion en lista
+        # regresar a: recorrer emociones
+        print(analisis)
