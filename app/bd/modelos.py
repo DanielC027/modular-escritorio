@@ -243,30 +243,32 @@ def obtener_escritos(id_usuario):
         print("Error al obtener escritos:", ex)
 
 
-def actualizar_escrito(id_escrito, contenido):
+def actualizar_escrito(id_usuario, fecha, contenido, iv, huella_digital):
     try:
         with obtener_conexion() as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "UPDATE ESCRITO SET Contenido = ? WHERE ID_Escrito = ?;",
-                (contenido, id_escrito),
+                "UPDATE ESCRITO SET CONTENIDO = ?, IV = ? WHERE FECHA = ? AND HUELLA_DIGITAL = ? AND ID_USUARIO = ?;",
+                (contenido, iv, fecha, huella_digital, id_usuario),
             )
             conn.commit()
     except Exception as ex:
         print("Error al actualizar escrito:", ex)
 
 
-def eliminar_escrito(id_escrito):
+def eliminar_escrito(fecha, huella_digital):
     try:
         with obtener_conexion() as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "DELETE FROM ESCRITO WHERE ID_Escrito = ?;",
-                (id_escrito,),
+                "DELETE FROM ESCRITO WHERE FECHA = ? AND HUELLA_DIGITAL = ?;",
+                (fecha, huella_digital),
             )
             conn.commit()
+            return True
     except Exception as ex:
         print("Error al eliminar escrito:", ex)
+        return False
 
 
 def mostrar_lista_escritos_en_bd(huella_digital):

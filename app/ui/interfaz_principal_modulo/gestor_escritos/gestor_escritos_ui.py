@@ -33,6 +33,9 @@ class GestorEscritosUI:
 
         self.cargar_tree_widget_al_iniciar()
 
+        self.contenido_original = ""
+
+        self.ui.Escritos_Escrito_textEdit.textChanged.connect(self.detectar_cambios)
         # ----- CONEXIONES -----
         self.ui.Escritos_Nuevo_pushButton.clicked.connect(self.nuevo_escrito)
         self.ui.Escritos_Guardar_pushButton.clicked.connect(self.llamar_guardar)
@@ -59,14 +62,29 @@ class GestorEscritosUI:
             return resp == QMessageBox.Yes
         return True
 
+    def detectar_cambios(self):
+        if not self.gestor_treewidget.fecha_actual:
+            return
+
+        texto_actual = self.ui.Escritos_Escrito_textEdit.toPlainText()
+
+        if texto_actual != self.contenido_original:
+            self.gestor_treewidget.marcar_como_modificado(
+                self.gestor_treewidget.fecha_actual
+            )
+        else:
+            self.gestor_treewidget.limpiar_modificado(
+                self.gestor_treewidget.fecha_actual
+            )
+
     # ----- NUEVO -----
     @Slot()
     def nuevo_escrito(self):
         try:
-            if not self.validar_cambios_sin_guardar():
-                return
+            if self.validar_cambios_sin_guardar():
+                self.guardar_escrito()
             else:
-                self.llamar_guardar()
+                return
 
             dialogo = SelectorFecha()
             resultado = dialogo.exec()
@@ -129,13 +147,23 @@ class GestorEscritosUI:
             fecha = self.gestor_treewidget.fecha_actual
 
             print("Guardando escrito...")
-            resultado = self.gestor_escritos.GuardarEscrito(fecha, texto, self.datos)
+
+            existe = self.gestor_escritos.RevisarExisteFechaGuardada(fecha, self.datos)
+
+            if existe:
+                resultado = self.gestor_escritos.ActualizarEscrito(
+                    fecha, texto, self.datos
+                )
+            else:
+                resultado = self.gestor_escritos.GuardarEscrito(
+                    fecha, texto, self.datos
+                )
 
             if not resultado:
                 QMessageBox.critical(
                     self.ui.centralwidget,
                     "Error",
-                    "No fue posible crear el escrito.",
+                    "No fue posible guardar el escrito.",
                 )
                 self.reactivar_botones()
                 return
@@ -187,6 +215,8 @@ class GestorEscritosUI:
 
             self.ui.Escritos_Escrito_textEdit.setEnabled(False)
 
+            self.contenido_original = self.ui.Escritos_Escrito_textEdit.toPlainText()
+            self.gestor_treewidget.limpiar_modificado(self.fecha_guardada_actual)
         except Exception as ex:
             print(f"Error en análisis: {ex}")
             self.error_proceso()
@@ -224,6 +254,20 @@ class GestorEscritosUI:
             )
             return
 
+        resultado = self.gestor_escritos.EliminarEscrito(fecha, self.datos)
+        if resultado:
+            QMessageBox.information(
+                self.ui.centralwidget,
+                "Informacion",
+                "Escrito eliminado.",
+            )
+        else:
+            QMessageBox.critical(
+                self.ui.centralwidget,
+                "Error",
+                "No fue posible eliminar.",
+            )
+        self.cargar_tree_widget_al_iniciar()
         print("Eliminar:", fecha)
         self.gestor_escritos.MostrarListaEscritos(self.datos)
         self.ui.Escritos_Escrito_textEdit.setEnabled(False)
@@ -238,9 +282,6 @@ class GestorEscritosUI:
         if not fecha:
             return
 
-        if "*" in item.text(0):
-            return
-
         contenido = self.gestor_escritos.LeerEscrito(fecha, self.datos)
 
         if not contenido:
@@ -250,8 +291,17 @@ class GestorEscritosUI:
                 "No fue posible obtener el escrito.",
             )
             self.ui.Escritos_Escrito_textEdit.setDisabled(True)
+            return
 
+        self.gestor_treewidget.fecha_actual = fecha
+
+        self.ui.Escritos_Escrito_textEdit.blockSignals(True)
         self.ui.Escritos_Escrito_textEdit.setPlainText(contenido)
+        self.ui.Escritos_Escrito_textEdit.blockSignals(False)
+
+        self.contenido_original = contenido
+        self.gestor_treewidget.sin_guardar = False
+
         self.ui.Escritos_Escrito_textEdit.setEnabled(True)
 
     @Slot()

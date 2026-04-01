@@ -21,12 +21,12 @@ def obtener_escrito(huella_digital, fecha):
     return obtener_escrito_de_bd(huella_digital, fecha)
 
 
-def actualizar_contenido_escrito(id_escrito, contenido):
-    actualizar_escrito(id_escrito, contenido)
+def actualizar_contenido(id_usuario, fecha, contenido, iv, huella_digital):
+    actualizar_escrito(id_usuario, fecha, contenido, iv, huella_digital)
 
 
-def eliminar_escrito_usuario(id_escrito):
-    eliminar_escrito(id_escrito)
+def eliminar_escrito_usuario(fecha, huella_digital):
+    return eliminar_escrito(fecha, huella_digital)
 
 
 def mostrar_lista_escritos(huella_digital):
