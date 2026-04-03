@@ -206,9 +206,12 @@ class GestorEscritosUI:
         try:
             print("Análisis completado")
 
-            self.graficar_analisis(resultado)
+            id_escrito = self.gestor_escritos.ObtenerIDEscrito(
+                self.fecha_guardada_actual, self.datos
+            )
 
             self.gestor_treewidget.actualizar_fecha_guardada(self.fecha_guardada_actual)
+            self.graficar_analisis(resultado, self.fecha_guardada_actual, id_escrito)
 
             QMessageBox.information(
                 self.ui.centralwidget,
@@ -308,12 +311,12 @@ class GestorEscritosUI:
         self.ui.Escritos_Escrito_textEdit.setEnabled(True)
 
     @Slot()
-    def graficar_analisis(self, resultado):
+    def graficar_analisis(self, resultado, fecha, id_escrito):
         try:
-            self.gestor_analisis_ui.graficar_dia(resultado)
-            self.gestor_analisis_ui.graficar_semana(resultado)
-            self.gestor_analisis_ui.graficar_mes(resultado)
-            self.gestor_analisis_ui.graficar_anio(resultado)
+            self.gestor_analisis_ui.graficar_dia(resultado, fecha, id_escrito)
+            self.gestor_analisis_ui.graficar_semana(resultado, fecha, id_escrito)
+            self.gestor_analisis_ui.graficar_mes(resultado, fecha, id_escrito)
+            self.gestor_analisis_ui.graficar_anio(resultado, fecha, id_escrito)
         except Exception as ex:
             print(ex)
             self.error_proceso()

@@ -70,7 +70,6 @@ def crear_tablas():
         CREATE TABLE IF NOT EXISTS ANALISIS (
             ID_Analisis INTEGER PRIMARY KEY AUTOINCREMENT,
             ID_Escrito INTEGER NOT NULL,
-            Fecha TEXT NOT NULL, -- ISO 8601
 
             FOREIGN KEY (ID_Escrito)
                 REFERENCES ESCRITO(ID_Escrito)

@@ -243,6 +243,19 @@ def obtener_escritos(id_usuario):
         print("Error al obtener escritos:", ex)
 
 
+def obtener_id_escrito_bd(huella_digital, fecha):
+    try:
+        with obtener_conexion() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT ID_ESCRITO FROM ESCRITO WHERE HUELLA_DIGITAL = ? AND FECHA = ?;",
+                (huella_digital, fecha),
+            )
+            return cursor.fetchone()
+    except Exception as ex:
+        print("Error al obtener id escrito:", ex)
+
+
 def actualizar_escrito(id_usuario, fecha, contenido, iv, huella_digital):
     try:
         with obtener_conexion() as conn:
@@ -299,21 +312,45 @@ def revisar_existe_fecha_guardada(huella_digital, fecha):
 """ TABLA ANALISIS """
 
 
-def crear_analisis(id_escrito, fecha):
+def crear_analisis(id_escrito):
     try:
         with obtener_conexion() as conn:
             cursor = conn.cursor()
             cursor.execute(
                 """
-                INSERT INTO ANALISIS (ID_Escrito, Fecha)
-                VALUES (?, ?);
+                INSERT INTO ANALISIS (ID_Escrito)
+                VALUES (?);
                 """,
-                (id_escrito, fecha),
+                (id_escrito,),
             )
             conn.commit()
-            return cursor.lastrowid
     except Exception as ex:
         print("Error al crear análisis:", ex)
+
+
+def revisar_existe_analisis(id_escrito):
+    try:
+        with obtener_conexion() as conn:
+            resultado = conn.execute(
+                "SELECT EXISTS (SELECT 1 FROM ANALISIS WHERE ID_ESCRITO = ?);",
+                (id_escrito,),
+            ).fetchone()[0]
+            return bool(resultado)
+    except Exception as ex:
+        print("Error al revisar si existe analisis ", ex)
+
+
+def obtener_id_analisis_por_id_escrito(id_escrito):
+    try:
+        with obtener_conexion() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT ID_ANALISIS FROM ANALISIS WHERE ID_ESCRITO = ?;",
+                (id_escrito,),
+            )
+            return cursor.fetchone()[0]
+    except Exception as ex:
+        print("Error al obtener id_analisis:", ex)
 
 
 """ TABLA LISTA EMOCIONES """

@@ -2,6 +2,14 @@
 
 from ...nucleo.analisis_modulo.analisis_ia_modulo import AnalisisANN
 from ..gestor_conexion_websocket.gestor_conexion_ws import BackendWSService
+
+from ...bd.repositorios.escrito_repo import obtener_id_escrito
+from ...bd.repositorios.analisis_repo import (
+    crear_analisis_escrito,
+    revisar_existe_analisis_en_bd,
+    obtener_id_analisis,
+)
+
 import asyncio
 import json
 import threading
@@ -49,6 +57,11 @@ class GestorAnalisis:
 
     def guardar_analisis(self, analisis):
         # crear analisis escrito
+        id_escrito = analisis["id_escrito"]
+        existe_analisis = revisar_existe_analisis_en_bd(id_escrito)
+        if not existe_analisis:
+            print("crear analisis")
+
         # obtener id_analisis
         # recorrer emociones
         #     emocion por emocion

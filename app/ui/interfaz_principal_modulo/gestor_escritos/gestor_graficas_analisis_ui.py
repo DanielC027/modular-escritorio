@@ -28,19 +28,27 @@ class GestorGraficasAnalisisUI(object):
         self.ui = ui
         self.gestor_analisis = GestorAnalisis()
 
-    def graficar_dia(self, resultado):
-        self.graficar_analisis_qt(resultado, self.ui.dia_graphic_widget)
+    def graficar_dia(self, resultado, fecha, id_escrito):
+        self.graficar_analisis_qt(
+            resultado, self.ui.dia_graphic_widget, fecha, id_escrito
+        )
 
-    def graficar_semana(self, resultado):
-        self.graficar_analisis_qt(resultado, self.ui.semana_graphic_widget)
+    def graficar_semana(self, resultado, fecha, id_escrito):
+        self.graficar_analisis_qt(
+            resultado, self.ui.semana_graphic_widget, fecha, id_escrito
+        )
 
-    def graficar_mes(self, resultado):
-        self.graficar_analisis_qt(resultado, self.ui.mes_graphic_widget)
+    def graficar_mes(self, resultado, fecha, id_escrito):
+        self.graficar_analisis_qt(
+            resultado, self.ui.mes_graphic_widget, fecha, id_escrito
+        )
 
-    def graficar_anio(self, resultado):
-        self.graficar_analisis_qt(resultado, self.ui.anio_graphic_widget)
+    def graficar_anio(self, resultado, fecha, id_escrito):
+        self.graficar_analisis_qt(
+            resultado, self.ui.anio_graphic_widget, fecha, id_escrito
+        )
 
-    def graficar_analisis_qt(self, resultado, graphic_widget):
+    def graficar_analisis_qt(self, resultado, graphic_widget, fecha, id_escrito):
         try:
             if "probabilidades" in resultado and "etiquetas" in resultado:
 
@@ -140,6 +148,8 @@ class GestorGraficasAnalisisUI(object):
 
             mensaje = {
                 "tipo": "analisis_emociones",
+                "fecha": fecha,
+                "id_escrito": id_escrito,
                 "timestamp": int(time.time()),
                 "valores": {
                     "probabilidades": probs_lista,

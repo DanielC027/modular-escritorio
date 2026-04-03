@@ -145,6 +145,15 @@ class GestorEscritos:
             print(ex)
             return False
 
+    def ObtenerIDEscrito(self, fecha, datos):
+        try:
+            huella_digital_bd = self.GenerarHuellaDigital(datos)
+            # ===== Buscar existencia de escrito =====
+            return existe_fecha_guardada(huella_digital_bd, fecha)
+        except Exception as ex:
+            print(ex)
+            return -1
+
     def GenerarHuellaDigital(self, datos):
         # ===== Generar huella digital =====
         clave_generada_huella_digital = self.aes_modulo.generar_HMAC(

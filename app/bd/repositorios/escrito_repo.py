@@ -6,6 +6,7 @@ from ..modelos import (
     mostrar_lista_escritos_en_bd,
     revisar_existe_fecha_guardada,
     obtener_escrito_de_bd,
+    obtener_id_escrito_bd,
 )
 
 
@@ -19,6 +20,10 @@ def obtener_escritos_usuario(id_usuario):
 
 def obtener_escrito(huella_digital, fecha):
     return obtener_escrito_de_bd(huella_digital, fecha)
+
+
+def obtener_id_escrito(huella_digital, fecha):
+    return obtener_id_escrito_bd(huella_digital, fecha)
 
 
 def actualizar_contenido(id_usuario, fecha, contenido, iv, huella_digital):
