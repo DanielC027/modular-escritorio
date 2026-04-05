@@ -30,25 +30,27 @@ class GestorGraficasAnalisisUI(object):
 
     def graficar_dia(self, resultado, fecha, id_escrito):
         self.graficar_analisis_qt(
-            resultado, self.ui.dia_graphic_widget, fecha, id_escrito
+            resultado, self.ui.dia_graphic_widget, fecha, id_escrito, True
         )
 
     def graficar_semana(self, resultado, fecha, id_escrito):
         self.graficar_analisis_qt(
-            resultado, self.ui.semana_graphic_widget, fecha, id_escrito
+            resultado, self.ui.semana_graphic_widget, fecha, id_escrito, False
         )
 
     def graficar_mes(self, resultado, fecha, id_escrito):
         self.graficar_analisis_qt(
-            resultado, self.ui.mes_graphic_widget, fecha, id_escrito
+            resultado, self.ui.mes_graphic_widget, fecha, id_escrito, False
         )
 
     def graficar_anio(self, resultado, fecha, id_escrito):
         self.graficar_analisis_qt(
-            resultado, self.ui.anio_graphic_widget, fecha, id_escrito
+            resultado, self.ui.anio_graphic_widget, fecha, id_escrito, False
         )
 
-    def graficar_analisis_qt(self, resultado, graphic_widget, fecha, id_escrito):
+    def graficar_analisis_qt(
+        self, resultado, graphic_widget, fecha, id_escrito, guardar
+    ):
         try:
             if "probabilidades" in resultado and "etiquetas" in resultado:
 
@@ -103,15 +105,15 @@ class GestorGraficasAnalisisUI(object):
 
                 brushes_color = []
                 etiquetas_es = []
-                print(etiquetas)
+                # print(etiquetas)
                 for e in etiquetas:
                     e = self.limpiar_etiqueta(e)
                     color = COLORES_EMOCIONES.get(e, "#7f8c8d")
-                    print(color)
+                    # print(color)
                     brushes_color.append(pg.mkBrush(QColor(color)))
 
                     etiquetas_es.append(TRADUCCION_ETIQUETAS.get(e, e))
-                print(brushes_color)
+                # print(brushes_color)
                 # barras
                 bg = pg.BarGraphItem(
                     x=x, height=probs_lista, width=0.6, brushes=brushes_color
@@ -156,8 +158,9 @@ class GestorGraficasAnalisisUI(object):
                     "etiquetas": [TRADUCCION_ETIQUETAS.get(e, e) for e in etiquetas],
                 },
             }
-            self.guardar_analisis_bd(mensaje)
-            self.gestor_analisis.enviar_datos_ws(mensaje)
+            if guardar:
+                self.guardar_analisis_bd(mensaje)
+                self.gestor_analisis.enviar_datos_ws(mensaje)
 
         except Exception as ex:
             print("Error graficando:", ex)
@@ -165,7 +168,7 @@ class GestorGraficasAnalisisUI(object):
 
     def guardar_analisis_bd(self, analisis):
         try:
-            print(analisis)
+            # print(analisis)
             self.gestor_analisis.guardar_analisis(analisis)
         except Exception as ex:
             print(ex)

@@ -373,6 +373,18 @@ def agregar_emocion_a_analisis(id_analisis, id_emocion, porcentaje):
         print("Error al agregar emoción:", ex)
 
 
+def existe_lista_emociones_bd(id_analisis):
+    try:
+        with obtener_conexion() as conn:
+            resultado = conn.execute(
+                "SELECT EXISTS (SELECT 1 FROM LISTA_EMOCIONES WHERE ID_ANALISIS = ?);",
+                (id_analisis,),
+            ).fetchone()[0]
+            return bool(resultado)
+    except Exception as ex:
+        print("Error al revisar si existe lista emociones:", ex)
+
+
 def obtener_emociones_de_analisis(id_analisis):
     try:
         with obtener_conexion() as conn:
@@ -405,3 +417,15 @@ def crear_emocion(nombre):
             conn.commit()
     except Exception as ex:
         print("Error al crear emoción:", ex)
+
+
+def existe_emocion_bd(nombre):
+    try:
+        with obtener_conexion() as conn:
+            resultado = conn.execute(
+                "SELECT EXISTS (SELECT 1 FROM EMOCION WHERE NOMBRE = ?);",
+                (nombre,),
+            ).fetchone()[0]
+            return bool(resultado)
+    except Exception as ex:
+        print("Error al revisar si existe emocion:", ex)

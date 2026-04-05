@@ -8,6 +8,8 @@ from ...bd.repositorios.analisis_repo import (
     crear_analisis_escrito,
     revisar_existe_analisis_en_bd,
     obtener_id_analisis,
+    existe_emocion,
+    existe_lista_emociones,
 )
 
 import asyncio
@@ -55,22 +57,36 @@ class GestorAnalisis:
         # Ejecutar en el loop del hilo
         asyncio.run_coroutine_threadsafe(enviar_ws(), self.loop)
 
-    def guardar_analisis(self, analisis):
+    def guardar_analisis(self, analisis):  # revisar si crea mas analisis
         # crear analisis escrito
         id_escrito = analisis["id_escrito"]
         existe_analisis = revisar_existe_analisis_en_bd(id_escrito)
         if not existe_analisis:
-            print("crear analisis")
-
+            crear_analisis_escrito(id_escrito)
         # obtener id_analisis
+        id_analisis = obtener_id_analisis(id_escrito)
         # recorrer emociones
-        #     emocion por emocion
-        # revisar si ya existe la emocion
-        #     si: nada
-        #     no: guardarla
-        # revisar si existe lista emociones
-        #     si: registrar emocion en lista
-        #     no: CREAR LISTA EMOCIONES CON ID_ANALISIS
-        #          registrar emocion en lista
-        # regresar a: recorrer emociones
+        #     emocion por emocionz
+        for emocion in analisis["valores"]["etiquetas"]:
+            # revisar si ya existe la emocion
+            #     si: nada
+            #     no: guardarla
+            print(emocion)
+            print(analisis["valores"]["probabilidades"])
+            print(analisis["valores"]["etiquetas"])
+            print(id_analisis)
+            # revisar si existe lista emociones
+            si_existe_emocion = existe_emocion(emocion)
+            if si_existe_emocion:  #     si: registrar emocion en lista
+                print("si exist emocion")
+            else:  #     no: CREAR LISTA EMOCIONES CON ID_ANALISIS
+                # existe lista emociones con id_analisis?
+                si_existe_lista_emociones = existe_lista_emociones(id_analisis)
+
+                if si_existe_lista_emociones:  #    si: actualizar lista
+                    print("si existe lista emociones")
+                else:  #    no: crear una
+                    print("no existe lista emociones")
+            #          registrar emocion en lista
+            # regresar a: recorrer emociones
         print(analisis)
