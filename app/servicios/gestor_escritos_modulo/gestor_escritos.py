@@ -8,6 +8,7 @@ from ...bd.repositorios.escrito_repo import (
     mostrar_lista_escritos,
     existe_fecha_guardada,
     obtener_escrito,
+    obtener_id_escrito,
     actualizar_contenido,
     eliminar_escrito_usuario,
 )
@@ -149,7 +150,7 @@ class GestorEscritos:
         try:
             huella_digital_bd = self.GenerarHuellaDigital(datos)
             # ===== Buscar existencia de escrito =====
-            return existe_fecha_guardada(huella_digital_bd, fecha)
+            return obtener_id_escrito(huella_digital_bd, fecha)
         except Exception as ex:
             print(ex)
             return -1

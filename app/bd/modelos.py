@@ -251,7 +251,7 @@ def obtener_id_escrito_bd(huella_digital, fecha):
                 "SELECT ID_ESCRITO FROM ESCRITO WHERE HUELLA_DIGITAL = ? AND FECHA = ?;",
                 (huella_digital, fecha),
             )
-            return cursor.fetchone()
+            return cursor.fetchone()["ID_ESCRITO"]
     except Exception as ex:
         print("Error al obtener id escrito:", ex)
 
@@ -363,7 +363,7 @@ def agregar_emocion_a_analisis(id_analisis, id_emocion, porcentaje):
             cursor.execute(
                 """
                 INSERT INTO LISTA_EMOCIONES
-                (ID_Analisis, ID_Emocion, Porcentaje_Emocion)
+                (ID_ANALISIS, ID_EMOCION, PORCENTAJE_EMOCION)
                 VALUES (?, ?, ?);
                 """,
                 (id_analisis, id_emocion, porcentaje),
@@ -371,6 +371,33 @@ def agregar_emocion_a_analisis(id_analisis, id_emocion, porcentaje):
             conn.commit()
     except Exception as ex:
         print("Error al agregar emoción:", ex)
+
+
+def actualizar_emocion_de_analisis(id_analisis, id_emocion, porcentaje):
+    try:
+        with obtener_conexion() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                UPDATE LISTA_EMOCIONES SET PORCENTAJE_EMOCION = ? WHERE ID_ANALISIS = ? AND ID_EMOCION = ?;
+                """,
+                (porcentaje, id_analisis, id_emocion),
+            )
+            conn.commit()
+    except Exception as ex:
+        print("Error al actualizar emoción:", ex)
+
+
+def existe_emocion_de_analisis(id_analisis, id_emocion):
+    try:
+        with obtener_conexion() as conn:
+            resultado = conn.execute(
+                "SELECT EXISTS (SELECT 1 FROM LISTA_EMOCIONES WHERE ID_ANALISIS = ? AND ID_EMOCION = ?);",
+                (id_analisis, id_emocion),
+            ).fetchone()[0]
+            return bool(resultado)
+    except Exception as ex:
+        print("Error al revisar si existe emocion:", ex)
 
 
 def existe_lista_emociones_bd(id_analisis):
@@ -406,6 +433,19 @@ def obtener_emociones_de_analisis(id_analisis):
 """ TABLA EMOCION """
 
 
+def obtener_id_emocion_bd(emocion):
+    try:
+        with obtener_conexion() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT ID_EMOCION FROM EMOCION WHERE NOMBRE = ?;",
+                (emocion,),
+            )
+            return cursor.fetchone()["ID_EMOCION"]
+    except Exception as ex:
+        print("Error al obtener id emoción:", ex)
+
+
 def crear_emocion(nombre):
     try:
         with obtener_conexion() as conn:
@@ -415,6 +455,7 @@ def crear_emocion(nombre):
                 (nombre,),
             )
             conn.commit()
+            return cursor.lastrowid
     except Exception as ex:
         print("Error al crear emoción:", ex)
 

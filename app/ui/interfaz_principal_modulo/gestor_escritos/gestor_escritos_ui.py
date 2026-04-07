@@ -210,6 +210,10 @@ class GestorEscritosUI:
                 self.fecha_guardada_actual, self.datos
             )
 
+            print(
+                "ID_ESCRITO EN ANALISIS COMPLETO - GESTOR_ESCRITOS_UI ->>>> ",
+                id_escrito,
+            )
             self.gestor_treewidget.actualizar_fecha_guardada(self.fecha_guardada_actual)
             self.graficar_analisis(resultado, self.fecha_guardada_actual, id_escrito)
 
