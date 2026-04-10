@@ -9,6 +9,10 @@ from ...bd.repositorios.analisis_repo import (
     revisar_existe_analisis_en_bd,
     obtener_id_analisis,
     obtener_id_emocion,
+    obtener_datos_dia,
+    obtener_datos_semana,
+    obtener_datos_mes,
+    obtener_datos_anio,
     existe_emocion,
     existe_lista_emociones,
     crear_emocion,
@@ -107,3 +111,15 @@ class GestorAnalisis:
 
         except Exception as ex:
             print(f"Error al guardar analisis: {ex}")
+
+    def obtener_analisis_dia(self, fecha, huella_digital):
+        return obtener_datos_dia(fecha, huella_digital)
+
+    def obtener_analisis_semana(self, fecha, huella_digital):
+        return obtener_datos_semana(fecha, huella_digital)
+
+    def obtener_analisis_mes(self, fecha, huella_digital):
+        return obtener_datos_mes(fecha, huella_digital)
+
+    def obtener_analisis_anio(self, fecha, huella_digital):
+        return obtener_datos_anio(fecha, huella_digital)

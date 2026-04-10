@@ -53,6 +53,7 @@ class GestorEscritos:
         try:
             # ===== Generar huella digital =====
             huella_digital_bd = self.GenerarHuellaDigital(datos)
+            print(huella_digital_bd)
             # ===== Obtener escrito =====
             fecha_bd = fecha
             # print(f"Leer escrito - Gestor escritos - {huella_digital_bd} {fecha}")

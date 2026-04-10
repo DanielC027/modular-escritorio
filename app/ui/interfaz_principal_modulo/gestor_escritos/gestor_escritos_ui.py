@@ -317,6 +317,18 @@ class GestorEscritosUI:
     @Slot()
     def graficar_analisis(self, resultado, fecha, id_escrito):
         try:
+            huella_digital = self.gestor_escritos.GenerarHuellaDigital(self.datos)
+            print("resultado graficar analisis - ", resultado)
+            print(fecha)
+            print(self.gestor_analisis.obtener_analisis_dia(fecha, huella_digital))
+            print(self.gestor_analisis.obtener_analisis_semana(fecha, huella_digital))
+            print(self.gestor_analisis.obtener_analisis_mes(fecha, huella_digital))
+            resultador_anio = self.gestor_analisis.obtener_analisis_anio(
+                fecha, huella_digital
+            )
+            print(resultador_anio)
+            resultados = [dict(row) for row in resultador_anio]
+            print("resultados -> ", resultados)
             self.gestor_analisis_ui.graficar_dia(resultado, fecha, id_escrito)
             self.gestor_analisis_ui.graficar_semana(resultado, fecha, id_escrito)
             self.gestor_analisis_ui.graficar_mes(resultado, fecha, id_escrito)

@@ -4,6 +4,10 @@ from ..modelos import (
     revisar_existe_analisis,
     obtener_id_analisis_por_id_escrito,
     obtener_id_emocion_bd,
+    obtener_promedio_emociones_dia,
+    obtener_promedio_emociones_semana,
+    obtener_promedio_emociones_mes,
+    obtener_promedio_emociones_anio,
     existe_emocion_bd,
     existe_lista_emociones_bd,
     existe_emocion_de_analisis,
@@ -56,3 +60,22 @@ def agregar_emocion_al_analisis(id_analisis, id_emocion, porcentaje):
 
 def actualizar_emocion_del_analisis(id_analisis, id_emocion, porcentaje):
     actualizar_emocion_de_analisis(id_analisis, id_emocion, porcentaje)
+
+
+# ---------------------------------------------------------------
+
+
+def obtener_datos_dia(fecha, huella_digital):
+    return obtener_promedio_emociones_dia(fecha, huella_digital)
+
+
+def obtener_datos_semana(fecha, huella_digital):
+    return obtener_promedio_emociones_semana(fecha, huella_digital)
+
+
+def obtener_datos_mes(fecha, huella_digital):
+    return obtener_promedio_emociones_mes(fecha, huella_digital)
+
+
+def obtener_datos_anio(fecha, huella_digital):
+    return obtener_promedio_emociones_anio(fecha, huella_digital)

@@ -412,7 +412,7 @@ def existe_lista_emociones_bd(id_analisis):
         print("Error al revisar si existe lista emociones:", ex)
 
 
-def obtener_emociones_de_analisis(id_analisis):
+def obtener_emociones_con_porcentaje_de_analisis(id_analisis):
     try:
         with obtener_conexion() as conn:
             cursor = conn.cursor()
@@ -429,6 +429,10 @@ def obtener_emociones_de_analisis(id_analisis):
     except Exception as ex:
         print("Error al obtener emociones:", ex)
 
+
+# SELECT E.Nombre, L.Porcentaje_Emocion FROM LISTA_EMOCIONES L JOIN EMOCION E ON L.ID_Emocion = E.ID_Emocion WHERE L.ID_Analisis = 1;
+
+# WITH base AS (SELECT FECHA, ID_Usuario FROM ESCRITO WHERE FECHA = '06-04-2026' AND HUELLA_DIGITAL = 'n/Tww/ZEn9lL1zrf5pR2w3TzmYFc1rouFlnLcCj/qtY=') SELECT em.Nombre, AVG(le.Porcentaje_Emocion) AS promedio FROM ESCRITO e JOIN base b JOIN ANALISIS a ON a.ID_Escrito = e.ID_Escrito JOIN LISTA_EMOCIONES le ON le.ID_Analisis = a.ID_Analisis JOIN EMOCION em ON em.ID_Emocion = le.ID_Emocion WHERE strftime('%Y-%W', e.FECHA) = strftime('%Y-%W', b.FECHA) AND e.ID_Usuario = b.ID_Usuario GROUP BY em.Nombre;
 
 """ TABLA EMOCION """
 
@@ -470,3 +474,174 @@ def existe_emocion_bd(nombre):
             return bool(resultado)
     except Exception as ex:
         print("Error al revisar si existe emocion:", ex)
+
+
+""" GRAFICAS """
+
+
+def obtener_promedio_emociones_dia(fecha, huella):
+    try:
+        with obtener_conexion() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                WITH escrito_base AS (
+                    SELECT ID_Escrito
+                    FROM ESCRITO
+                    WHERE FECHA = ?
+                    AND HUELLA_DIGITAL = ?
+                )
+                SELECT 
+                    em.Nombre,
+                    le.Porcentaje_Emocion
+                FROM ANALISIS a
+                JOIN escrito_base eb 
+                    ON a.ID_Escrito = eb.ID_Escrito
+                JOIN LISTA_EMOCIONES le 
+                    ON le.ID_Analisis = a.ID_Analisis
+                JOIN EMOCION em 
+                    ON em.ID_Emocion = le.ID_Emocion;
+            """,
+                (fecha, huella),
+            )
+            return cursor.fetchall()
+    except Exception as ex:
+        print("Error:", ex)
+
+
+def obtener_promedio_emociones_anio_est(fecha, huella):
+    try:
+        with obtener_conexion() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                WITH escrito_base AS (
+                    SELECT FECHA, ID_Usuario
+                    FROM ESCRITO
+                    WHERE FECHA = ? AND HUELLA_DIGITAL = ?
+                )
+                SELECT 
+                    em.Nombre,
+                    AVG(le.Porcentaje_Emocion) AS promedio
+                FROM ESCRITO e
+                JOIN escrito_base eb 
+                    ON e.ID_Usuario = eb.ID_Usuario
+                JOIN ANALISIS a 
+                    ON a.ID_Escrito = e.ID_Escrito
+                JOIN LISTA_EMOCIONES le 
+                    ON le.ID_Analisis = a.ID_Analisis
+                JOIN EMOCION em 
+                    ON em.ID_Emocion = le.ID_Emocion
+                WHERE strftime('%Y', e.FECHA) = strftime('%Y', eb.FECHA)
+                GROUP BY em.Nombre;
+            """,
+                (fecha, huella),
+            )
+            return cursor.fetchall()
+    except Exception as ex:
+        print("Error:", ex)
+
+
+def obtener_promedio_emociones_anio(fecha, huella):
+    try:
+        with obtener_conexion() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                WITH datos AS (
+                    SELECT 
+                        e.ID_Escrito,
+                        a.ID_Analisis,
+                        le.ID_Emocion,
+                        em.Nombre AS Nombre_Emocion,
+                        le.Porcentaje_Emocion
+                    FROM ESCRITO e
+                    JOIN ANALISIS a 
+                        ON a.ID_Escrito = e.ID_Escrito
+                    JOIN LISTA_EMOCIONES le 
+                        ON le.ID_Analisis = a.ID_Analisis
+                    JOIN EMOCION em 
+                        ON em.ID_Emocion = le.ID_Emocion
+                    WHERE e.HUELLA_DIGITAL = ?
+                      AND strftime('%Y', e.FECHA) = strftime('%Y', ?)
+                )
+                SELECT 
+                    ID_Emocion,
+                    Nombre_Emocion,
+                    AVG(Porcentaje_Emocion) AS PROMEDIO_EMOCION,
+                    COUNT(*) AS CONTEO_EMOCION
+                FROM datos
+                GROUP BY ID_Emocion, Nombre_Emocion;
+            """,
+                (huella, fecha),
+            )
+            print(cursor.fetchall())
+            return cursor.fetchall()
+    except Exception as ex:
+        print("Error:", ex)
+
+
+def obtener_promedio_emociones_mes(fecha, huella):
+    try:
+        with obtener_conexion() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                WITH escrito_base AS (
+                    SELECT FECHA
+                    FROM ESCRITO
+                    WHERE FECHA = ?
+                    AND HUELLA_DIGITAL = ?
+                )
+                SELECT 
+                    em.Nombre,
+                    AVG(le.Porcentaje_Emocion) AS promedio
+                FROM ESCRITO e
+                JOIN escrito_base eb
+                JOIN ANALISIS a 
+                    ON a.ID_Escrito = e.ID_Escrito
+                JOIN LISTA_EMOCIONES le 
+                    ON le.ID_Analisis = a.ID_Analisis
+                JOIN EMOCION em 
+                    ON em.ID_Emocion = le.ID_Emocion
+                WHERE strftime('%Y-%m', e.FECHA) = strftime('%Y-%m', eb.FECHA)
+                GROUP BY em.Nombre;
+            """,
+                (fecha, huella),
+            )
+            return cursor.fetchall()
+    except Exception as ex:
+        print("Error:", ex)
+
+
+def obtener_promedio_emociones_semana(fecha, huella):
+    try:
+        with obtener_conexion() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                WITH escrito_base AS (
+                    SELECT FECHA
+                    FROM ESCRITO
+                    WHERE FECHA = ?
+                    AND HUELLA_DIGITAL = ?
+                )
+                SELECT 
+                    em.Nombre,
+                    AVG(le.Porcentaje_Emocion) AS promedio
+                FROM ESCRITO e
+                JOIN escrito_base eb
+                JOIN ANALISIS a 
+                    ON a.ID_Escrito = e.ID_Escrito
+                JOIN LISTA_EMOCIONES le 
+                    ON le.ID_Analisis = a.ID_Analisis
+                JOIN EMOCION em 
+                    ON em.ID_Emocion = le.ID_Emocion
+                WHERE strftime('%Y-%W', e.FECHA) = strftime('%Y-%W', eb.FECHA)
+                GROUP BY em.Nombre;
+            """,
+                (fecha, huella),
+            )
+            return cursor.fetchall()
+    except Exception as ex:
+        print("Error:", ex)
