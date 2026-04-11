@@ -105,14 +105,28 @@ class GestorGraficasAnalisisUI(object):
 
                 brushes_color = []
                 etiquetas_es = []
-                # print(etiquetas)
-                for e in etiquetas:
-                    e = self.limpiar_etiqueta(e)
-                    color = COLORES_EMOCIONES.get(e, "#7f8c8d")
-                    # print(color)
-                    brushes_color.append(pg.mkBrush(QColor(color)))
 
-                    etiquetas_es.append(TRADUCCION_ETIQUETAS.get(e, e))
+                if etiquetas[0] == "otros":
+                    TRADUCCION_ETIQUETAS_ESP = {
+                        v: k for k, v in TRADUCCION_ETIQUETAS.items()
+                    }
+                    for e in etiquetas:
+                        e = self.limpiar_etiqueta(e)
+                        nombre_ing = TRADUCCION_ETIQUETAS_ESP.get(e, "joy")
+                        color = COLORES_EMOCIONES.get(nombre_ing, "#7f8c8d")
+                        # print(color)
+                        brushes_color.append(pg.mkBrush(QColor(color)))
+
+                        etiquetas_es.append(e)
+                else:
+                    for e in etiquetas:
+                        e = self.limpiar_etiqueta(e)
+                        color = COLORES_EMOCIONES.get(e, "#7f8c8d")
+                        # print(color)
+                        brushes_color.append(pg.mkBrush(QColor(color)))
+
+                        etiquetas_es.append(TRADUCCION_ETIQUETAS.get(e, e))
+
                 # print(brushes_color)
                 # barras
                 bg = pg.BarGraphItem(

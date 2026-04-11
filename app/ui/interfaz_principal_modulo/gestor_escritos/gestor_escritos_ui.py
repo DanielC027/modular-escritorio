@@ -47,6 +47,10 @@ class GestorEscritosUI:
 
         self.ui.Escritos_Escrito_textEdit.setEnabled(False)
 
+        self.ui.Graficas_Fecha_dateEdit.dateChanged.connect(
+            self.graficar_seccion_graficas
+        )
+
     def cargar_tree_widget_al_iniciar(self):
         lista_escritos = self.gestor_escritos.MostrarListaEscritos(self.datos)
         print(lista_escritos)
@@ -208,11 +212,6 @@ class GestorEscritosUI:
             id_escrito = self.gestor_escritos.ObtenerIDEscrito(
                 self.fecha_guardada_actual, self.datos
             )
-
-            print(
-                "ID_ESCRITO EN ANALISIS COMPLETO - GESTOR_ESCRITOS_UI ->>>> ",
-                id_escrito,
-            )
             self.gestor_treewidget.actualizar_fecha_guardada(self.fecha_guardada_actual)
             self.graficar_analisis(resultado, self.fecha_guardada_actual, id_escrito)
 
@@ -317,58 +316,148 @@ class GestorEscritosUI:
     def graficar_analisis(self, resultado, fecha, id_escrito):
         try:
             huella_digital = self.gestor_escritos.GenerarHuellaDigital(self.datos)
-            print("resultado graficar analisis - ", resultado)
-            print(fecha)
-            resultado_dia = self.gestor_analisis.obtener_analisis_dia(fecha, huella_digital)
-            for objeto_1 in resultado_dia:
-                print(objeto_1[0])
-                print(objeto_1[1])
-            #print(resultado_dia["ID_Emocion"])
-            resultado_semana = self.gestor_analisis.obtener_analisis_semana(fecha, huella_digital)
-            for semana in resultado_semana:
-                for dato in semana:
-                    print("semana: ",dato)
-            resultado_mes = self.gestor_analisis.obtener_analisis_mes(fecha, huella_digital)
-            for mes in resultado_mes:
-                for dato in mes:
-                    print("mes -> ", dato)
-            resultador_anio = self.gestor_analisis.obtener_analisis_anio(
+
+            # DATOS DIA
+            resultado_dia = self.gestor_analisis.obtener_analisis_dia(
                 fecha, huella_digital
             )
-            datos_anio = []
-            for anio in resultador_anio:
-                dato = {
-                    "NOMBRE_EMOCION":anio[1],
-                    "PORCENTAJE_EMOCION":anio[2],
-                }
-                datos_anio.append(dato)
+            etiquetas_dia = [dato[0] for dato in resultado_dia]
+            probabilidades_dia = [dato[1] for dato in resultado_dia]
+            datos_dia = {
+                "probabilidades": probabilidades_dia,
+                "etiquetas": {
+                    index: etiqueta for index, etiqueta in enumerate(etiquetas_dia)
+                },
+            }
+
+            # DATOS SEMANA
+            resultado_semana = self.gestor_analisis.obtener_analisis_semana(
+                fecha, huella_digital
+            )
+            etiquetas_semana = [anio[1] for anio in resultado_semana]
+            probabilidades_semana = [anio[2] for anio in resultado_semana]
+            datos_semana = {
+                "probabilidades": probabilidades_semana,
+                "etiquetas": {
+                    index: etiqueta for index, etiqueta in enumerate(etiquetas_semana)
+                },
+            }
+
+            # DATOS MES
+            resultado_mes = self.gestor_analisis.obtener_analisis_mes(
+                fecha, huella_digital
+            )
+            etiquetas_mes = [anio[1] for anio in resultado_mes]
+            probabilidades_mes = [anio[2] for anio in resultado_mes]
+            datos_mes = {
+                "probabilidades": probabilidades_mes,
+                "etiquetas": {
+                    index: etiqueta for index, etiqueta in enumerate(etiquetas_mes)
+                },
+            }
+
+            # DATOS ANIO
+            resultado_anio = self.gestor_analisis.obtener_analisis_anio(
+                fecha, huella_digital
+            )
+            etiquetas_anio = [anio[1] for anio in resultado_anio]
+            probabilidades_anio = [anio[2] for anio in resultado_anio]
+            datos_anio = {
+                "probabilidades": probabilidades_anio,
+                "etiquetas": {
+                    index: etiqueta for index, etiqueta in enumerate(etiquetas_anio)
+                },
+            }
 
             print(datos_anio)
 
-            for dato in datos_anio:
-                print(dato["NOMBRE_EMOCION"])
-                print(dato["PORCENTAJE_EMOCION"])
-
-
-            #print("anio: ->->-> ",resultador_anio)
-            #resultados = [dict(row) for row in resultador_anio]
-            #print("resultados -> ", resultados)
-            #print(resultador_anio)
-            #print(resultador_anio["ID_Emocion"])
-            self.gestor_analisis_ui.graficar_dia(resultado, fecha, id_escrito)
-            self.gestor_analisis_ui.graficar_semana(resultado, fecha, id_escrito)
-            self.gestor_analisis_ui.graficar_mes(resultado, fecha, id_escrito)
-            self.gestor_analisis_ui.graficar_anio(resultado, fecha, id_escrito)
+            self.gestor_analisis_ui.graficar_dia(datos_dia, fecha, id_escrito)
+            self.gestor_analisis_ui.graficar_semana(datos_semana, fecha, id_escrito)
+            self.gestor_analisis_ui.graficar_mes(datos_mes, fecha, id_escrito)
+            self.gestor_analisis_ui.graficar_anio(datos_anio, fecha, id_escrito)
         except Exception as ex:
             print(ex)
             self.error_proceso()
-            #open<codigoasscii>
+            # open<codigoasscii>
 
             """ Estoy escribiendo esto el 10 de abril y estoy en una fiesta con la familia de mi novio precioso hermoso chulo. El tiene que estar haciendo su tarea porque dentro de un mes (si Dios quiere) va a concluir una gran etapa de su vida, y es requisito que termine con esto, así que quiero que quede registrado aquí este gran día. Amén. Pd: Loa mo mucho  y es el amor de mi vida, y estoy muy orgullosa de el.  """
+
+    @Slot()
+    def graficar_seccion_graficas(self):
+        try:
+            fecha = self.ui.Graficas_Fecha_dateEdit.date().toString("yyyy-MM-dd")
+
+            id_escrito = self.gestor_escritos.ObtenerIDEscrito(fecha, self.datos)
+
+            huella_digital = self.gestor_escritos.GenerarHuellaDigital(self.datos)
+
+            # DATOS DIA
+            resultado_dia = self.gestor_analisis.obtener_analisis_dia(
+                fecha, huella_digital
+            )
+            etiquetas_dia = [dato[0] for dato in resultado_dia]
+            probabilidades_dia = [dato[1] for dato in resultado_dia]
+            datos_dia = {
+                "probabilidades": probabilidades_dia,
+                "etiquetas": {
+                    index: etiqueta for index, etiqueta in enumerate(etiquetas_dia)
+                },
+            }
+
+            # DATOS SEMANA
+            resultado_semana = self.gestor_analisis.obtener_analisis_semana(
+                fecha, huella_digital
+            )
+            etiquetas_semana = [anio[1] for anio in resultado_semana]
+            probabilidades_semana = [anio[2] for anio in resultado_semana]
+            datos_semana = {
+                "probabilidades": probabilidades_semana,
+                "etiquetas": {
+                    index: etiqueta for index, etiqueta in enumerate(etiquetas_semana)
+                },
+            }
+
+            # DATOS MES
+            resultado_mes = self.gestor_analisis.obtener_analisis_mes(
+                fecha, huella_digital
+            )
+            etiquetas_mes = [anio[1] for anio in resultado_mes]
+            probabilidades_mes = [anio[2] for anio in resultado_mes]
+            datos_mes = {
+                "probabilidades": probabilidades_mes,
+                "etiquetas": {
+                    index: etiqueta for index, etiqueta in enumerate(etiquetas_mes)
+                },
+            }
+
+            # DATOS ANIO
+            resultado_anio = self.gestor_analisis.obtener_analisis_anio(
+                fecha, huella_digital
+            )
+            etiquetas_anio = [anio[1] for anio in resultado_anio]
+            probabilidades_anio = [anio[2] for anio in resultado_anio]
+            datos_anio = {
+                "probabilidades": probabilidades_anio,
+                "etiquetas": {
+                    index: etiqueta for index, etiqueta in enumerate(etiquetas_anio)
+                },
+            }
+
+            print(datos_anio)
+
+            self.gestor_analisis_ui.graficar_dia(datos_dia, fecha, id_escrito)
+            self.gestor_analisis_ui.graficar_semana(datos_semana, fecha, id_escrito)
+            self.gestor_analisis_ui.graficar_mes(datos_mes, fecha, id_escrito)
+            self.gestor_analisis_ui.graficar_anio(datos_anio, fecha, id_escrito)
+        except Exception as ex:
+            print(ex)
+            self.error_proceso()
+            # open<codigoasscii>
+
     @Slot()
     def error_proceso(self):
         QMessageBox.critical(
             self.ui.centralwidget,
             "ERROR",
-            "¡Ha ocurrido un error durante el análisis o el guardado!",
+            "¡Ha ocurrido un error durante la graficación!",
         )
