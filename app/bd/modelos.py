@@ -575,12 +575,17 @@ def obtener_promedio_emociones_anio(fecha, huella):
             """,
                 (huella, fecha),
             )
-            print(cursor.fetchall())
-            return cursor.fetchall()
+            resultado = cursor.fetchall()
+            """for dato in resultado:
+                for dat in dato:
+                    print(dat)"""
+            return resultado
     except Exception as ex:
         print("Error:", ex)
 
-
+"""
+WITH datos AS ( SELECT e.ID_Escrito, a.ID_Analisis, le.ID_Emocion, em.Nombre AS Nombre_Emocion, le.Porcentaje_Emocion FROM ESCRITO e JOIN ANALISIS a ON a.ID_Escrito = e.ID_Escrito JOIN LISTA_EMOCIONES le ON le.ID_Analisis = a.ID_Analisis JOIN EMOCION em  ON em.ID_Emocion = le.ID_Emocion  WHERE e.HUELLA_DIGITAL = ? AND strftime('%Y', e.FECHA) = strftime('%Y', ?) ) SELECT  ID_Emocion, Nombre_Emocion, AVG(Porcentaje_Emocion) AS PROMEDIO_EMOCION, COUNT(*) AS CONTEO_EMOCION FROM datos GROUP BY ID_Emocion, Nombre_Emocion;
+"""
 def obtener_promedio_emociones_mes(fecha, huella):
     try:
         with obtener_conexion() as conn:

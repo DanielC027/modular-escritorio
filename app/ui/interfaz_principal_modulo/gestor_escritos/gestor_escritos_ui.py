@@ -1,7 +1,6 @@
 import json
 from datetime import date
 
-
 from PySide6.QtWidgets import (
     QGraphicsScene,
     QGraphicsRectItem,
@@ -320,15 +319,42 @@ class GestorEscritosUI:
             huella_digital = self.gestor_escritos.GenerarHuellaDigital(self.datos)
             print("resultado graficar analisis - ", resultado)
             print(fecha)
-            print(self.gestor_analisis.obtener_analisis_dia(fecha, huella_digital))
-            print(self.gestor_analisis.obtener_analisis_semana(fecha, huella_digital))
-            print(self.gestor_analisis.obtener_analisis_mes(fecha, huella_digital))
+            resultado_dia = self.gestor_analisis.obtener_analisis_dia(fecha, huella_digital)
+            for objeto_1 in resultado_dia:
+                print(objeto_1[0])
+                print(objeto_1[1])
+            #print(resultado_dia["ID_Emocion"])
+            resultado_semana = self.gestor_analisis.obtener_analisis_semana(fecha, huella_digital)
+            for semana in resultado_semana:
+                for dato in semana:
+                    print("semana: ",dato)
+            resultado_mes = self.gestor_analisis.obtener_analisis_mes(fecha, huella_digital)
+            for mes in resultado_mes:
+                for dato in mes:
+                    print("mes -> ", dato)
             resultador_anio = self.gestor_analisis.obtener_analisis_anio(
                 fecha, huella_digital
             )
-            print(resultador_anio)
-            resultados = [dict(row) for row in resultador_anio]
-            print("resultados -> ", resultados)
+            datos_anio = []
+            for anio in resultador_anio:
+                dato = {
+                    "NOMBRE_EMOCION":anio[1],
+                    "PORCENTAJE_EMOCION":anio[2],
+                }
+                datos_anio.append(dato)
+
+            print(datos_anio)
+
+            for dato in datos_anio:
+                print(dato["NOMBRE_EMOCION"])
+                print(dato["PORCENTAJE_EMOCION"])
+
+
+            #print("anio: ->->-> ",resultador_anio)
+            #resultados = [dict(row) for row in resultador_anio]
+            #print("resultados -> ", resultados)
+            #print(resultador_anio)
+            #print(resultador_anio["ID_Emocion"])
             self.gestor_analisis_ui.graficar_dia(resultado, fecha, id_escrito)
             self.gestor_analisis_ui.graficar_semana(resultado, fecha, id_escrito)
             self.gestor_analisis_ui.graficar_mes(resultado, fecha, id_escrito)
@@ -336,7 +362,9 @@ class GestorEscritosUI:
         except Exception as ex:
             print(ex)
             self.error_proceso()
+            #open<codigoasscii>
 
+            """ Estoy escribiendo esto el 10 de abril y estoy en una fiesta con la familia de mi novio precioso hermoso chulo. El tiene que estar haciendo su tarea porque dentro de un mes (si Dios quiere) va a concluir una gran etapa de su vida, y es requisito que termine con esto, así que quiero que quede registrado aquí este gran día. Amén. Pd: Loa mo mucho  y es el amor de mi vida, y estoy muy orgullosa de el.  """
     @Slot()
     def error_proceso(self):
         QMessageBox.critical(
