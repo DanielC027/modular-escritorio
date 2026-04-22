@@ -73,7 +73,7 @@ class GestorGraficasAnalisisUI(object):
                     "surprise": "#e67e22",
                     "others": "#95a5a6",
                 }
-
+                print(resultado)
                 probabilidades = resultado["probabilidades"]
                 etiquetas = [
                     resultado["etiquetas"][i] for i in range(len(probabilidades))

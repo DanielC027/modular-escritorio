@@ -213,6 +213,7 @@ class GestorEscritosUI:
                 self.fecha_guardada_actual, self.datos
             )
             self.gestor_treewidget.actualizar_fecha_guardada(self.fecha_guardada_actual)
+            print(resultado)
             self.graficar_analisis(resultado, self.fecha_guardada_actual, id_escrito)
 
             QMessageBox.information(
@@ -321,15 +322,15 @@ class GestorEscritosUI:
             resultado_dia = self.gestor_analisis.obtener_analisis_dia(
                 fecha, huella_digital
             )
-            etiquetas_dia = [dato[0] for dato in resultado_dia]
+            """etiquetas_dia = [dato[0] for dato in resultado_dia]
             probabilidades_dia = [dato[1] for dato in resultado_dia]
             datos_dia = {
                 "probabilidades": probabilidades_dia,
                 "etiquetas": {
                     index: etiqueta for index, etiqueta in enumerate(etiquetas_dia)
                 },
-            }
-
+            }"""
+            datos_dia = resultado
             # DATOS SEMANA
             resultado_semana = self.gestor_analisis.obtener_analisis_semana(
                 fecha, huella_digital
