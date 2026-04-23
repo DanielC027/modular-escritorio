@@ -1,9 +1,12 @@
 import asyncio
 import threading
+
 from collections import deque
 
 from ...nucleo.analisis_modulo.analisis_ia_modulo import AnalisisANN
-from ..gestor_conexion_websocket.gestor_conexion_ws import BackendWSService
+from ..gestor_conexion_websocket.gestor_conexion_ws import WSService
+from ..gestor_auth.servicio_auth import AuthService
+from ..gestor_http.servicio_http import HTTPService
 
 from ...bd.repositorios.escrito_repo import obtener_id_escrito
 from ...bd.repositorios.analisis_repo import (
@@ -25,63 +28,76 @@ from ...bd.repositorios.analisis_repo import (
 
 class GestorAnalisis:
     def __init__(self):
-        self.backend_ws = None
-        self.ws_ready = False
-        self.cola_mensajes = deque()
-
         self.loop = asyncio.new_event_loop()
-        threading.Thread(target=self._run_loop, args=(self.loop,), daemon=True).start()
+        threading.Thread(target=self._run_loop, daemon=True).start()
 
-        asyncio.run_coroutine_threadsafe(self._conectar_ws(), self.loop)
+        # Servicios
+        self.auth = AuthService("http://localhost:8000")
+        self.http = HTTPService("http://localhost:8000", self.auth)
+        self.ws = WSService("ws://localhost:8000/ws", self.auth)
+
+        # Estado
+        self.ws_ready = False
+        self.cola_ws = deque()
+
+        # Init async
+        asyncio.run_coroutine_threadsafe(self._init_services(), self.loop)
         asyncio.run_coroutine_threadsafe(self._ws_worker(), self.loop)
 
-    def _run_loop(self, loop):
-        asyncio.set_event_loop(loop)
-        loop.run_forever()
+    def _run_loop(self):
+        asyncio.set_event_loop(self.loop)
+        self.loop.run_forever()
 
-    async def _conectar_ws(self):
-        try:
-            ws = BackendWSService("ws://localhost:8000/ws")
-            await ws.login()
-            await ws.conectar()
-            self.backend_ws = ws
-            self.ws_ready = True
-            print("Conectado al backend WebSocket")
-        except Exception as e:
-            self.backend_ws = None
-            self.ws_ready = False
-            print("Error al conectar WS:", e)
+    async def _init_services(self):
+        retry = 1
+
+        while True:
+            try:
+                print("Login...")
+                await self.auth.login("daniel@gmail.com", "America1?")
+
+                print("Conectando WS...")
+                await self.ws.conectar()
+
+                self.ws_ready = True
+                print("Todo listo 🚀")
+                return
+
+            except Exception as e:
+                print("Error init:", e)
+                await asyncio.sleep(retry)
+                retry = min(retry * 2, 30)
+
+    # ---------------- WS ----------------
+
+    def enviar_ws(self, mensaje):
+        self.cola_ws.append(mensaje)
 
     async def _ws_worker(self):
         while True:
-            if self.backend_ws and self.cola_mensajes:
-                mensaje = self.cola_mensajes.popleft()
+            if self.ws_ready and self.cola_ws:
+                msg = self.cola_ws.popleft()
+
                 try:
-                    await self.backend_ws.enviar(mensaje)
-                    print("Mensaje enviado desde worker")
+                    await self.ws.enviar(msg)
                 except Exception as e:
-                    print("Error enviando WS:", e)
-                    self.cola_mensajes.appendleft(mensaje)
+                    print("Error WS:", e)
+                    self.ws_ready = False
+                    self.cola_ws.appendleft(msg)
+
             await asyncio.sleep(0.1)
 
+    # ---------------- HTTP ----------------
+
+    def enviar_analisis_http(self, data):
+        asyncio.run_coroutine_threadsafe(self.http.guardar_analisis(data), self.loop)
+
+    # ANALISIS
     def analizar_texto(self, texto, progreso=None):
         analisis = AnalisisANN()
         return analisis.analizar_texto(texto)
 
-    def enviar_datos_ws(self, mensaje):
-        if not self.ws_ready or not self.backend_ws:
-            self.cola_mensajes.append(mensaje)
-            return
-
-        async def enviar():
-            try:
-                await self.backend_ws.enviar(mensaje)
-                print("Mensaje enviado al backend")
-            except Exception as e:
-                print("Error enviando WS:", e)
-
-        asyncio.run_coroutine_threadsafe(enviar(), self.loop)
-
+    # GUARDADO EN BD (independiente del WS)
     def guardar_analisis(self, analisis):
         try:
             id_escrito = analisis["id_escrito"]
@@ -107,10 +123,11 @@ class GestorAnalisis:
                     actualizar_emocion_del_analisis(id_analisis, id_emocion, porcentaje)
                 else:
                     agregar_emocion_al_analisis(id_analisis, id_emocion, porcentaje)
-
+            print("Analisis a mandar a backend: ", analisis)
         except Exception as ex:
-            print(ex)
+            print("Error guardando análisis:", ex)
 
+    # CONSULTAS
     def obtener_analisis_dia(self, fecha, huella_digital):
         return obtener_datos_dia(fecha, huella_digital)
 

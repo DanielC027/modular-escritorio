@@ -1,5 +1,6 @@
 import json
 from datetime import date
+import base64
 
 from PySide6.QtWidgets import (
     QGraphicsScene,
@@ -370,12 +371,22 @@ class GestorEscritosUI:
                 },
             }
 
-            print(datos_anio)
+            # print(datos_anio)
+            huella_digital_decode = huella_digital.decode("utf-8")
+            # print(huella_digital_decode)
 
-            self.gestor_analisis_ui.graficar_dia(datos_dia, fecha, id_escrito)
-            self.gestor_analisis_ui.graficar_semana(datos_semana, fecha, id_escrito)
-            self.gestor_analisis_ui.graficar_mes(datos_mes, fecha, id_escrito)
-            self.gestor_analisis_ui.graficar_anio(datos_anio, fecha, id_escrito)
+            self.gestor_analisis_ui.graficar_dia(
+                huella_digital_decode, datos_dia, fecha, id_escrito
+            )
+            self.gestor_analisis_ui.graficar_semana(
+                huella_digital_decode, datos_semana, fecha, id_escrito
+            )
+            self.gestor_analisis_ui.graficar_mes(
+                huella_digital_decode, datos_mes, fecha, id_escrito
+            )
+            self.gestor_analisis_ui.graficar_anio(
+                huella_digital_decode, datos_anio, fecha, id_escrito
+            )
         except Exception as ex:
             print(ex)
             self.error_proceso()
@@ -445,11 +456,21 @@ class GestorEscritosUI:
             }
 
             print(datos_anio)
+            huella_digital_decode = huella_digital.decode("utf-8")
+            # print(huella_digital_decode)
 
-            self.gestor_analisis_ui.graficar_dia(datos_dia, fecha, id_escrito)
-            self.gestor_analisis_ui.graficar_semana(datos_semana, fecha, id_escrito)
-            self.gestor_analisis_ui.graficar_mes(datos_mes, fecha, id_escrito)
-            self.gestor_analisis_ui.graficar_anio(datos_anio, fecha, id_escrito)
+            self.gestor_analisis_ui.graficar_dia(
+                huella_digital_decode, datos_dia, fecha, id_escrito
+            )
+            self.gestor_analisis_ui.graficar_semana(
+                huella_digital_decode, datos_semana, fecha, id_escrito
+            )
+            self.gestor_analisis_ui.graficar_mes(
+                huella_digital_decode, datos_mes, fecha, id_escrito
+            )
+            self.gestor_analisis_ui.graficar_anio(
+                huella_digital_decode, datos_anio, fecha, id_escrito
+            )
         except Exception as ex:
             print(ex)
             self.error_proceso()

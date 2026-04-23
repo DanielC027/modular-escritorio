@@ -28,28 +28,48 @@ class GestorGraficasAnalisisUI(object):
         self.ui = ui
         self.gestor_analisis = GestorAnalisis()
 
-    def graficar_dia(self, resultado, fecha, id_escrito):
+    def graficar_dia(self, huella_digital, resultado, fecha, id_escrito):
         self.graficar_analisis_qt(
-            resultado, self.ui.dia_graphic_widget, fecha, id_escrito, True
+            huella_digital,
+            resultado,
+            self.ui.dia_graphic_widget,
+            fecha,
+            id_escrito,
+            True,
         )
 
-    def graficar_semana(self, resultado, fecha, id_escrito):
+    def graficar_semana(self, huella_digital, resultado, fecha, id_escrito):
         self.graficar_analisis_qt(
-            resultado, self.ui.semana_graphic_widget, fecha, id_escrito, False
+            huella_digital,
+            resultado,
+            self.ui.semana_graphic_widget,
+            fecha,
+            id_escrito,
+            False,
         )
 
-    def graficar_mes(self, resultado, fecha, id_escrito):
+    def graficar_mes(self, huella_digital, resultado, fecha, id_escrito):
         self.graficar_analisis_qt(
-            resultado, self.ui.mes_graphic_widget, fecha, id_escrito, False
+            huella_digital,
+            resultado,
+            self.ui.mes_graphic_widget,
+            fecha,
+            id_escrito,
+            False,
         )
 
-    def graficar_anio(self, resultado, fecha, id_escrito):
+    def graficar_anio(self, huella_digital, resultado, fecha, id_escrito):
         self.graficar_analisis_qt(
-            resultado, self.ui.anio_graphic_widget, fecha, id_escrito, False
+            huella_digital,
+            resultado,
+            self.ui.anio_graphic_widget,
+            fecha,
+            id_escrito,
+            False,
         )
 
     def graficar_analisis_qt(
-        self, resultado, graphic_widget, fecha, id_escrito, guardar
+        self, huella_digital, resultado, graphic_widget, fecha, id_escrito, guardar
     ):
         try:
             if "probabilidades" in resultado and "etiquetas" in resultado:
@@ -167,6 +187,7 @@ class GestorGraficasAnalisisUI(object):
                 "fecha": fecha,
                 "id_escrito": id_escrito,
                 "timestamp": int(time.time()),
+                "huella_digital": huella_digital,
                 "valores": {
                     "probabilidades": probs_lista,
                     "etiquetas": [TRADUCCION_ETIQUETAS.get(e, e) for e in etiquetas],
@@ -174,7 +195,8 @@ class GestorGraficasAnalisisUI(object):
             }
             if guardar:
                 self.guardar_analisis_bd(mensaje)
-                self.gestor_analisis.enviar_datos_ws(mensaje)
+                self.gestor_analisis.enviar_ws(mensaje)
+                self.gestor_analisis.enviar_analisis_http(mensaje)
 
         except Exception as ex:
             print("Error graficando:", ex)
