@@ -54,7 +54,7 @@ class GestorAnalisis:
         while True:
             try:
                 print("Login...")
-                await self.auth.login("daniel@gmail.com", "America1?")
+                await self.auth.login("america@gmail.com", "America1?")
 
                 print("Conectando WS...")
                 await self.ws.conectar()
