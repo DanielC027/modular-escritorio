@@ -8,6 +8,8 @@ from ..gestor_conexion_websocket.gestor_conexion_ws import WSService
 from ..gestor_auth.servicio_auth import AuthService
 from ..gestor_http.servicio_http import HTTPService
 
+from ...nucleo.analisis_modulo.evaluacion_modulo import evaluar_modelo
+
 from ...bd.repositorios.escrito_repo import obtener_id_escrito
 from ...bd.repositorios.analisis_repo import (
     crear_analisis_escrito,
@@ -96,6 +98,9 @@ class GestorAnalisis:
     def analizar_texto(self, texto, progreso=None):
         analisis = AnalisisANN()
         return analisis.analizar_texto(texto)
+
+    def evaluar_modelo_IA(self):
+        evaluar_modelo()
 
     # GUARDADO EN BD (independiente del WS)
     def guardar_analisis(self, analisis):

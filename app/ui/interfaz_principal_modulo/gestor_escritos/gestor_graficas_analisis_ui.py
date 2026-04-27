@@ -194,6 +194,7 @@ class GestorGraficasAnalisisUI(object):
                 },
             }
             if guardar:
+                # self.gestor_analisis.evaluar_modelo_IA()
                 self.guardar_analisis_bd(mensaje)
                 self.gestor_analisis.enviar_ws(mensaje)
                 self.gestor_analisis.enviar_analisis_http(mensaje)
