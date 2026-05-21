@@ -9,7 +9,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
 )
 from PySide6.QtGui import QBrush, QColor
-from PySide6.QtCore import Qt, Slot
+from PySide6.QtCore import Qt, Slot, QDate
 
 from ..mainwindow_ui import Ui_MainWindow
 from .gestor_graficas_analisis_ui import GestorGraficasAnalisisUI
@@ -47,6 +47,9 @@ class GestorEscritosUI:
         self.ui.Escritos_Escritos_treeWidget.itemClicked.connect(self.on_item_click)
 
         self.ui.Escritos_Escrito_textEdit.setEnabled(False)
+
+        fecha = QDate.currentDate()
+        self.ui.Graficas_Fecha_dateEdit.setDate(fecha)
 
         self.ui.Graficas_Fecha_dateEdit.dateChanged.connect(
             self.graficar_seccion_graficas
@@ -176,6 +179,10 @@ class GestorEscritosUI:
                 return
 
             self.fecha_guardada_actual = fecha
+
+            fecha_qdate = QDate.fromString(fecha, "yyyy-MM-dd")
+            print(fecha_qdate.isValid())
+            self.ui.Graficas_Fecha_dateEdit.setDate(fecha_qdate)
 
             print("Iniciando análisis...")
             self.iniciar_analisis(texto)

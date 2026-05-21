@@ -58,6 +58,13 @@ class UiInterfazSesion(QMainWindow):
                 "Error",
                 "Usuario o Contraseña incorrecta, intenta de nuevo.",
             )
+        else:
+            msgBox = QMessageBox()
+            msgBox.critical(
+                self.ui.centralwidget,
+                "Error",
+                "Usuario o Contraseña incorrecta, intenta de nuevo.",
+            )
 
     @Slot()
     def registrarse(self):

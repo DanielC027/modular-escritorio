@@ -43,15 +43,11 @@ class GestorSesion:
         # --- Obtener usuario por usuario sal, payload_a, iv_a, payload_b, iv_b de la bd
         # id perosna
         id_persona = obtener_usuario_por_usuario(usuario)
-
+        if not id_persona:
+            return {"estado": -1, "sal": ""}
         # datos persona - id, usuario, sal = sal_a | sal_b
         datos_persona = mostrar_usuario_por_id(id_persona)
-        print(
-            "datos persona: ",
-            datos_persona[USUARIO["USUARIO"]],
-            " ",
-            datos_persona[USUARIO["SAL"]],
-        )
+        # print("datos persona: ",datos_persona[USUARIO["USUARIO"]]," ",datos_persona[USUARIO["SAL"]],)
         # datos control crypto - id_crypto, id_usuario, payload_a, iv_a, payload_b, iv_b
         datos_control_crypto = obtener_control(id_persona)
         print(

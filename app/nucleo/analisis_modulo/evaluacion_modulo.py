@@ -4,25 +4,53 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 
-# installa/uninstall - > pip install scikit-learn seaborn matplotlib
 def evaluar_modelo():
     # Inicializar modelo
     analizador = AnalisisANN()
 
-    # Dataset pequeño (puedes ampliarlo si quieres)
+    # Dataset de pruebas
     data = [
+        # JOY
         ("estoy muy feliz hoy", "joy"),
-        ("me siento triste", "sadness"),
-        ("estoy enojado contigo", "anger"),
-        ("tengo miedo de esto", "fear"),
         ("esto es increíble", "joy"),
-        ("odio esto", "anger"),
+        ("me siento contento con mi vida", "joy"),
+        ("todo salió perfecto y estoy encantado", "joy"),
+        ("qué día tan maravilloso", "joy"),
+        ("no puedo dejar de sonreír", "joy"),
+        # SADNESS
+        ("me siento triste", "sadness"),
         ("me siento solo", "sadness"),
+        ("hoy ha sido un día muy duro", "sadness"),
+        ("extraño mucho esos momentos", "sadness"),
+        ("me siento vacío por dentro", "sadness"),
+        ("nada me motiva últimamente", "sadness"),
+        # ANGER
+        ("estoy enojado contigo", "anger"),
+        ("odio esto", "anger"),
+        ("esto me saca de quicio", "anger"),
+        ("no soporto esta situación", "anger"),
+        ("me irrita que pase esto", "anger"),
+        ("estoy furioso por lo ocurrido", "anger"),
+        # FEAR
+        ("tengo miedo de esto", "fear"),
         ("estoy nervioso", "fear"),
+        ("siento que algo malo va a pasar", "fear"),
+        ("me da pánico intentarlo", "fear"),
+        ("no me siento seguro aquí", "fear"),
+        ("estoy preocupado por el futuro", "fear"),
+        # SURPRISE
+        ("no me esperaba esto para nada", "surprise"),
+        ("qué sorpresa tan grande", "surprise"),
+        ("esto me dejó sin palabras", "surprise"),
+        ("no puedo creer lo que pasó", "surprise"),
+        ("esto fue totalmente inesperado", "surprise"),
+        ("es algo que no me imaginaba", "surprise"),
     ]
 
     y_true = []
     y_pred = []
+
+    resultado = None
 
     for texto, etiqueta_real in data:
         resultado = analizador.analizar_texto(texto)
@@ -36,11 +64,10 @@ def evaluar_modelo():
         y_true.append(etiqueta_real)
         y_pred.append(pred_label)
 
-    # 📊 Reporte de métricas
-    print("\n=== REPORTE DE CLASIFICACIÓN ===\n")
-    print(classification_report(y_true, y_pred))
+    print("\n--> REPORTE DE CLASIFICACIÓN <--\n")
+    print(classification_report(y_true, y_pred, labels=resultado["etiquetas"]))
 
-    # 📉 Matriz de confusión
+    # Matriz de confusion
     cm = confusion_matrix(y_true, y_pred)
 
     sns.heatmap(cm, annot=True, fmt="d")
@@ -48,3 +75,6 @@ def evaluar_modelo():
     plt.xlabel("Predicción")
     plt.ylabel("Real")
     plt.show()
+
+
+# installa/uninstall - > pip install scikit-learn seaborn matplotlib
