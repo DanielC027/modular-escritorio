@@ -57,13 +57,13 @@ Cada escrito es analizado automáticamente mediante un modelo de Inteligencia Ar
 
 ## Estadísticas
 
-![Statistics](readme_resources/desktop_graphics.png)
+![Statistics](readme_resources/desktop_graphic.png)
 
 ---
 
 ## Página web
 
-![WebPage](readme_resources/front_graphics.png)
+![WebPage](readme_resources/front_graphic.png)
 
 ---
 
